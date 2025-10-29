@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using IngameDebugConsole;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -131,6 +132,12 @@ public class MineManager : MonoBehaviour
 
         ReBuildAll();
         _domain.BreakIfHpZero();
+    }
+
+    void Start()
+    {
+        DebugLogConsole.AddCommandInstance("save_mine", "Saves the current mine state to a file.", "Save", this);
+        DebugLogConsole.AddCommandInstance("load_mine", "Loads the mine state from a file.", "Load", this);
     }
 
     void OnRockClicked(int rockId)

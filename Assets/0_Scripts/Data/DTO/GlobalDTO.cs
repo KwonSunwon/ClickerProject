@@ -5,7 +5,7 @@ public class GlobalDTO
 {
     public int Version;
 
-    public string ProjileId;
+    public string ProfileId;
     public string GameVersion;
 
     public long CreatedAt;
