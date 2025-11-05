@@ -1,12 +1,12 @@
 ﻿using static Util;
 
-public class MineMapper
+public static class MineMapper
 {
     public const int CURRENT_VERSION = 1;
 
-    public static MineSaveDTO ToDTO(MineState state)
+    public static bool ToDTO(MineState state, out MineSaveDTO dto)
     {
-        var dto = new MineSaveDTO {
+        dto = new MineSaveDTO {
             Id = state.Id,
             CurrentDepth = state.CurrentDepth,
             Lines = new()
@@ -40,9 +40,15 @@ public class MineMapper
                 lineDTO.Veins.Add(veinDTO);
             }
 
+            if (lineDTO.Veins.Count != line.Veins.Count)
+                return false;
+
             dto.Lines.Add(lineDTO);
         }
-        return dto;
+
+        if (dto.Lines.Count != state.Lines.Count)
+            return false;
+        return true;
     }
 
     public static bool FromDTO(MineSaveDTO dto, MineState state)
@@ -79,8 +85,13 @@ public class MineMapper
                 line.Veins.Add(vein);
             }
 
+            if (lineDTO.Veins.Count != line.Veins.Count)
+                return false;
+
             state.Lines.Add(line);
         }
+        if (dto.Lines.Count != state.Lines.Count)
+            return false;
         return true;
     }
 }
