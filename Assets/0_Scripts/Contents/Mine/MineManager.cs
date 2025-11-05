@@ -7,7 +7,7 @@ using UnityEngine;
 /// MineData, MineUI 관리
 /// Mine에 object를 추가하고 제거하는 모든 작업을 여기에 요청해서 처리
 /// </summary>
-public class MineManager : MonoBehaviour
+public class MineManager : MonoBehaviour, ISaveHandler
 {
     [SerializeField] private Transform lineContainer;
     [SerializeField] private Transform lineAddPosition;
@@ -133,11 +133,14 @@ public class MineManager : MonoBehaviour
         ReBuildAll();
         _domain.BreakIfHpZero();
     }
-
     void Start()
     {
+        Managers.Save.Register(this);
+
+#if UNITY_EDITOR
         DebugLogConsole.AddCommandInstance("save_mine", "Saves the current mine state to a file.", "Save", this);
         DebugLogConsole.AddCommandInstance("load_mine", "Loads the mine state from a file.", "Load", this);
+#endif
     }
 
     void OnRockClicked(int rockId)
@@ -272,31 +275,32 @@ public class MineManager : MonoBehaviour
     #endregion
 
     #region Save/Load
-    [ContextMenu("Save")]
-    public void Save()
+    public bool OnSaveRequest(GlobalDTO dto)
     {
-        var dto = MineMapper.ToDTO(_state);
-        var json = JsonUtility.ToJson(dto);
-        File.WriteAllText(SAVE_PATH, json);
+        Debug.Log("MineManager OnSaveRequest");
+        return MineMapper.ToDTO(_state, out dto.Mine);
     }
 
-    [ContextMenu("Load")]
-    public MineState Load()
+    public bool OnLoadRequest(GlobalDTO dto)
     {
-        var json = File.ReadAllText(SAVE_PATH);
-        var dto = JsonUtility.FromJson<MineSaveDTO>(json);
-        MineMapper.FromDTO(dto, _state);
+        Debug.Log("MineManager OnLoadRequest");
+        var result = MineMapper.FromDTO(dto.Mine, _state);
 
-        ReBuildAll();
-        _domain.BreakIfHpZero();
+        Reload();
 
-        return _state;
+        return result;
     }
     #endregion
 
     #region Utility
+    private void Reload()
+    {
+        ReBuildAll();
+        _domain.BreakIfHpZero();
+    }
+
     /// <summary>
-    /// rockId로 RockState와 해당 Rock이 속한 LineState를 찾음
+    /// rockId로 RockState와 해당 Rock 이 속한 LineState를 찾음
     /// </summary>
     RockState FindRockState(int rockId, out LineState lineOut)
     {
