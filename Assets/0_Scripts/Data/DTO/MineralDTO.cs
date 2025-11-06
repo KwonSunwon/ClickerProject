@@ -12,7 +12,7 @@ namespace Mineral
 
     public static class Mapper
     {
-        public static bool CreateDTO(Dictionary<MineralType, MineralSlot> minerals, out DTO dto)
+        public static bool MakeDTO(Dictionary<MineralType, MineralSlot> minerals, out DTO dto)
         {
             dto = new DTO();
             dto.Id = new List<int>();
@@ -30,14 +30,13 @@ namespace Mineral
 
         public static bool ApplyFromDTO(DTO dto, Dictionary<MineralType, MineralSlot> minerals)
         {
-            var s = dto as DTO;
-            for (int i = 0; i < s.Id.Count; i++) {
-                MineralType key = (MineralType)s.Id[i];
+            for (int i = 0; i < dto.Id.Count; i++) {
+                MineralType key = (MineralType)dto.Id[i];
                 if (!minerals.ContainsKey(key)) {
                     UnityEngine.Debug.LogError("Error @MineralMapper - FromDTO: Mineral key not found in minerals dictionary");
                     return false;
                 }
-                minerals[key].Amount = new BigNumber(s.Amount[i]);
+                minerals[key].Amount = new BigNumber(dto.Amount[i]);
             }
             return true;
         }
