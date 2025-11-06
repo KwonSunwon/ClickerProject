@@ -64,13 +64,13 @@ public class SkillManager : ISaveHandler
     public bool OnSaveRequest(GlobalDTO dto)
     {
         Debug.Log("SkillManager OnSaveRequest");
-        return SkillMapper.ToDTO(SkillMap, out dto.Skill);
+        return Skill.Mapper.MakeDTO(SkillMap, out dto.Skill);
     }
 
     public bool OnLoadRequest(GlobalDTO dto)
     {
         Debug.Log("SkillManager OnLoadRequest");
-        return SkillMapper.FromDTO(dto.Skill, SkillMap);
+        return Skill.Mapper.ApplyFromDTO(dto.Skill, SkillMap);
     }
     #endregion
 
