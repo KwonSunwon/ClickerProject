@@ -13,6 +13,7 @@ public class GlobalDTO
 
     //public int Seed;
 
-    public MineSaveDTO Mine;
-    public SkillSaveDTO Skill;
+    public Mine.DTO Mine;
+    public Skill.DTO Skill;
+    public Mineral.DTO Mineral;
 }
