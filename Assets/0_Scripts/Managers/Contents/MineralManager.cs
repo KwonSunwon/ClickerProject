@@ -188,7 +188,7 @@ public class MineralManager : ISaveHandler
     #region Save/Load
     public bool OnSaveRequest(GlobalDTO dto)
     {
-        return Mineral.Mapper.CreateDTO(_map, out dto.Mineral);
+        return Mineral.Mapper.MakeDTO(_map, out dto.Mineral);
     }
 
     public bool OnLoadRequest(GlobalDTO dto)

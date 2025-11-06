@@ -1,5 +1,4 @@
-﻿using IngameDebugConsole;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -136,11 +135,6 @@ public class MineManager : MonoBehaviour, ISaveHandler
     void Start()
     {
         Managers.Save.Register(this);
-
-#if UNITY_EDITOR
-        DebugLogConsole.AddCommandInstance("save_mine", "Saves the current mine state to a file.", "Save", this);
-        DebugLogConsole.AddCommandInstance("load_mine", "Loads the mine state from a file.", "Load", this);
-#endif
     }
 
     void OnRockClicked(int rockId)

@@ -34,14 +34,13 @@ namespace Skill
 
         public static bool ApplyFromDTO(DTO dto, Dictionary<int, SkillNodeData> skills)
         {
-            var s = dto as DTO;
-            for (int i = 0; i < s.Id.Count; i++) {
-                int key = s.Id[i];
+            for (int i = 0; i < dto.Id.Count; i++) {
+                int key = dto.Id[i];
                 if (!skills.ContainsKey(key)) {
                     Debug.LogError("Error @SkillMapper - FromDTO: Skill key not found in skills dictionary");
                     return false;
                 }
-                skills[key].Level = s.Level[i];
+                skills[key].Level = dto.Level[i];
             }
             return true;
         }
