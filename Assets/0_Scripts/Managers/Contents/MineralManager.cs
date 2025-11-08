@@ -91,6 +91,15 @@ public class MineralManager
 			new MineralSlot((MineralType)11, new BigNumber(300), new BigNumber(300)),
 			new MineralSlot((MineralType)12, new BigNumber(300), new BigNumber(100)),
 			new MineralSlot((MineralType)13, new BigNumber(300), new BigNumber(1)),
+			new MineralSlot((MineralType)14, new BigNumber(300), new BigNumber(1)),
+			new MineralSlot((MineralType)15, new BigNumber(300), new BigNumber(1)),
+			new MineralSlot((MineralType)16, new BigNumber(300), new BigNumber(1)),
+			new MineralSlot((MineralType)17, new BigNumber(300), new BigNumber(1)),
+			new MineralSlot((MineralType)18, new BigNumber(300), new BigNumber(1)),
+			new MineralSlot((MineralType)19, new BigNumber(300), new BigNumber(1)),
+			new MineralSlot((MineralType)20, new BigNumber(300), new BigNumber(1)),
+			new MineralSlot((MineralType)21, new BigNumber(300), new BigNumber(1)),
+			new MineralSlot((MineralType)22, new BigNumber(300), new BigNumber(1)),
 		};
 
 		_map.Clear();
