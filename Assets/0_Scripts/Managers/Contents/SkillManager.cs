@@ -156,6 +156,7 @@ public class SkillManager
 
 		UnityEngine.Debug.Log($"{skill.Name} 스킬 구매 성공!");
 		SaveSkills();
+		Managers.Stat.CalcStat();
 		return true;
 	}
 
@@ -219,8 +220,8 @@ public class SkillNodeData
 	public int Level { get; set; } //0이라면 배우지 않은것
 
 
-
-
+	public string Function { get; set; }
+	public float StatPerLevel { get; set; }
 }
 
 public class ReincarnationNodeData

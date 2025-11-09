@@ -10,11 +10,12 @@ public class Managers : MonoBehaviour
     AchievementManager _achievement = new AchievementManager();
     MineralManager _mineralManager = new MineralManager();
     SkillManager _skillManager = new SkillManager();
-
+    StatManager _statManager = new StatManager();
     public static GameManagerEx Game { get { return Instance._game; } }
     public static MineralManager Mineral { get { return Instance._mineralManager; } }
     public static SkillManager Skill { get { return Instance._skillManager; } }
     public static AchievementManager Achievement { get { return Instance._achievement; } }
+    public static StatManager Stat { get { return Instance._statManager; } }
     #endregion
 
     #region Core
