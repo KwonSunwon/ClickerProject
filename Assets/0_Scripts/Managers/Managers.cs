@@ -10,12 +10,14 @@ public class Managers : MonoBehaviour
     AchievementManager _achievement = new AchievementManager();
     MineralManager _mineralManager = new MineralManager();
     SkillManager _skillManager = new SkillManager();
+    SaveManager _saveManager = new SaveManager();
     StatManager _statManager = new StatManager();
     public static GameManagerEx Game { get { return Instance._game; } }
     public static MineralManager Mineral { get { return Instance._mineralManager; } }
     public static SkillManager Skill { get { return Instance._skillManager; } }
     public static AchievementManager Achievement { get { return Instance._achievement; } }
     public static StatManager Stat { get { return Instance._statManager; } }
+    public static SaveManager Save { get { return Instance._saveManager; } }
     #endregion
 
     #region Core
@@ -61,6 +63,9 @@ public class Managers : MonoBehaviour
 
             DontDestroyOnLoad(go);
             s_instance = go.GetComponent<Managers>();
+
+            //NOTE: SaveManager에 OnSave 이벤트에 다른 매니저들의 Save 함수를 등록해야 하므로 먼저 초기화
+            s_instance._saveManager.Init();
 
             s_instance._data.Init();
             s_instance._pool.Init();
