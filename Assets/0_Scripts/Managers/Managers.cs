@@ -49,6 +49,7 @@ public class Managers : MonoBehaviour
     private void FixedUpdate()
     {
         _input.OnUpdate();
+        _statManager.test();
     }
 
 
@@ -74,7 +75,7 @@ public class Managers : MonoBehaviour
             s_instance._mineralManager.Init();
             s_instance._mineralManager.TickLoop();
             s_instance._skillManager.Init();
-            s_instance._achievement.Init();
+            s_instance._achievement.Init();	
         }
     }
 
