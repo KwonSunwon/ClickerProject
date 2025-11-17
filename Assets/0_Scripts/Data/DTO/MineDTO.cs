@@ -62,7 +62,7 @@ namespace Mine
                     foreach (var rock in line.Rocks) {
                         var rockDTO = new RockDTO {
                             Id = GetHex(rock.Id),
-                            Hp = rock.Hp
+                            Hp = rock.Hp,
                         };
                         lineDTO.Rocks.Add(rockDTO);
                     }
@@ -107,7 +107,9 @@ namespace Mine
                     foreach (var rockDTO in lineDTO.Rocks) {
                         var rock = new RockState {
                             Id = GetDec(rockDTO.Id),
-                            Hp = rockDTO.Hp
+                            Hp = rockDTO.Hp,
+                            //TODO: 임시로 강제 주입, 나중에 Domain 쪽에서 한 번에 처리하거나 다른 방식으로 한 번에 처리
+                            MaxHp = Math.Max(6, (int)(line.Depth * 0.5f))
                         };
                         line.Rocks.Add(rock);
                     }
