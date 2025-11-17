@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+[Obsolete("더 이상 사용하지 않음. 추후 의존성 제거 후 삭제 예정")]
 public class MineDataManager
 {
     private SecureDataManager dataManager = new SecureDataManager();
@@ -58,6 +59,7 @@ public class MineDataManager
     }
 }
 
+[Obsolete("더 이상 사용하지 않음. 추후 의존성 제거 후 삭제 예정")]
 [Serializable]
 public class MineData : ISaveable
 {
@@ -66,6 +68,7 @@ public class MineData : ISaveable
     public List<LineData> Lines = new();
 }
 
+[Obsolete("더 이상 사용하지 않음. 추후 의존성 제거 후 삭제 예정")]
 [Serializable]
 public class LineData
 {
@@ -115,6 +118,7 @@ public class LineData
     }
 }
 
+[Obsolete("더 이상 사용하지 않음. 추후 의존성 제거 후 삭제 예정")]
 [Serializable]
 public class RockData
 {
@@ -122,6 +126,7 @@ public class RockData
     public bool IsBroken => Hp <= 0;
 }
 
+[Obsolete("더 이상 사용하지 않음. 추후 의존성 제거 후 삭제 예정")]
 [Serializable]
 public class VeinData
 {
