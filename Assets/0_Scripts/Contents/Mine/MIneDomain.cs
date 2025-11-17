@@ -32,7 +32,7 @@ public class RockState
     public int Id;
     //public int Type;
     public int Hp;
-    //public int MaxHp;
+    public int MaxHp;   //NOTE: Line Depth에 따라 결정
     public bool IsBroken => Hp <= 0;
 }
 
@@ -111,6 +111,7 @@ public sealed class MineDomain
         //TODO: vein 클릭 시 종류에 따른 자원 획득, 효과 발동 등 로직 처리
         var type = vein.Type;
         //IDEA: IVeinHandler 같은 인터페이스를 만들어서 종류별로 처리?
+        Managers.Mineral.Add((MineralType)type, new(3));
 
         OnVeinClicked?.Invoke(vein.Id, 1);
     }
@@ -153,7 +154,8 @@ public sealed class MineDomain
         for (int i = 0; i < _rules.RocksPerLine(); i++) {
             var rock = new RockState {
                 Id = MakeRockId(line.Depth, i),
-                Hp = _rules.RockHpForDepth(line.Depth)
+                Hp = _rules.RockHpForDepth(line.Depth),
+                MaxHp = _rules.RockHpForDepth(line.Depth)
             };
             line.Rocks.Add(rock);
         }
