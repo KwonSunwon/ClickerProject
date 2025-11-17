@@ -7,8 +7,15 @@ public class EomTestScene : BaseScene
 	{
 		base.Init();
 		MineralManager mineralManager = Managers.Mineral;
-		Managers.UI.ShowSceneUI<UI_Scene_Skill>();
-
+		//Managers.UI.ShowSceneUI<UI_Scene_Skill>();
+		{
+			GameObject prefab = Resources.Load<GameObject>("Prefabs/UI/Scene/UI_Scene_Skill");
+			GameObject ui = Instantiate(prefab);
+		}
+		{
+			GameObject prefab = Resources.Load<GameObject>("Prefabs/UI/UI_Mine_Shop");
+			GameObject ui = Instantiate(prefab);
+		}
 	}
 
 	public override void Clear()

@@ -957,6 +957,7 @@ GameObject:
   - component: {fileID: 3084826975701497669}
   - component: {fileID: 4620500092686383339}
   - component: {fileID: 4876336643024059832}
+  - component: {fileID: 6966597086158345124}
   m_Layer: 5
   m_Name: BackButton
   m_TagString: Untagged
@@ -1066,6 +1067,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6966597086158345124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9185239427682577450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9baa1f6079e4fc942bb7d92e27e72f4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Parent_GO: {fileID: 8594008307257923748}
 --- !u!1001 &535033231135771208
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1076,11 +1090,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 388196625195458830, guid: b2ece92571f4fde42b6bce43ebf87baf, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 388196625195458830, guid: b2ece92571f4fde42b6bce43ebf87baf, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 388196625195458830, guid: b2ece92571f4fde42b6bce43ebf87baf, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1092,11 +1106,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 388196625195458830, guid: b2ece92571f4fde42b6bce43ebf87baf, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 50
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 388196625195458830, guid: b2ece92571f4fde42b6bce43ebf87baf, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3785933000442067915, guid: b2ece92571f4fde42b6bce43ebf87baf, type: 3}
       propertyPath: m_Pivot.x
