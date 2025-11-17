@@ -54,8 +54,8 @@ public class MineManager : MonoBehaviour, ISaveHandler
                 //new Mine.RockDTO { Id = "00F", Hp = 1 }
                 //},
                 Veins = new() {
-                    new Mine.VeinDTO { Id = "010", Pos = "005", Type = (int)VeinType.Bauxite },
-                    new Mine.VeinDTO { Id = "020", Pos = "00B", Type = (int)VeinType.Coal }
+                    //new Mine.VeinDTO { Id = "010", Pos = "005", Type = (int)VeinType.Bauxite },
+                    new Mine.VeinDTO { Id = "020", Pos = "00B", Type = (int)MineralType.Coal }
                 }
             };
             dto.Lines.Add(line);
@@ -82,8 +82,8 @@ public class MineManager : MonoBehaviour, ISaveHandler
                 new Mine.RockDTO { Id = "10F", Hp = 6 }
                 },
                 Veins = new() {
-                    new Mine.VeinDTO { Id = "110", Pos = "10A", Type = (int)VeinType.CopperOre },
-                    new Mine.VeinDTO { Id = "120", Pos = "102", Type = (int)VeinType.Diamond }
+                    new Mine.VeinDTO { Id = "110", Pos = "10A", Type = (int)MineralType.Coal },
+                    new Mine.VeinDTO { Id = "120", Pos = "102", Type = (int)MineralType.Coal }
                 }
             };
             dto.Lines.Add(line);
@@ -110,8 +110,8 @@ public class MineManager : MonoBehaviour, ISaveHandler
                 new Mine.RockDTO { Id = "20F", Hp = 6 }
                 },
                 Veins = new() {
-                    new Mine.VeinDTO { Id = "210", Pos = "20C", Type = (int)VeinType.IronOre },
-                    new Mine.VeinDTO { Id = "220", Pos = "204", Type = (int)VeinType.Coal }
+                    new Mine.VeinDTO { Id = "210", Pos = "20C", Type = (int)MineralType.Coal },
+                    new Mine.VeinDTO { Id = "220", Pos = "204", Type = (int)MineralType.Coal }
                 }
             };
             dto.Lines.Add(line);

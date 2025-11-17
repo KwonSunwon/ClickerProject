@@ -111,6 +111,7 @@ public sealed class MineDomain
         //TODO: vein 클릭 시 종류에 따른 자원 획득, 효과 발동 등 로직 처리
         var type = vein.Type;
         //IDEA: IVeinHandler 같은 인터페이스를 만들어서 종류별로 처리?
+        Managers.Mineral.Add((MineralType)type, new(3));
 
         OnVeinClicked?.Invoke(vein.Id, 1);
     }

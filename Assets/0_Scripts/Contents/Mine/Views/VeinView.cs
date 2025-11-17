@@ -6,34 +6,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.U2D;
 using UnityEngine.UI;
 
-public enum VeinType
-{
-    IronOre,
-    CopperOre,
-    Coal,
-    GoldNugget,
-    Salt,
-    Bauxite,
-    Lithium,
-    Diamond,
-    Ruby,
-    Sapphire,
-    Emerald,
-    Quartz,
-    Uranium,
-    XenonCrystal,
-    GammaStone,
-    QuantumFlux,
-    VoidCrystal,
-    DarkMatterShard,
-    StellarIron,
-    NebulaDust,
-    CosmicGlass,
-    NeutroniumOre,
-    AlienAlloy,
-    MAX_NUM
-}
-
 public static class VeinSpriteCatalog
 {
     private const string PATH = "Art/Ore/Ores";
@@ -49,8 +21,8 @@ public static class VeinSpriteCatalog
                 return null;
             }
 
-            foreach (VeinType val in Enum.GetValues(typeof(VeinType))) {
-                if (val == VeinType.MAX_NUM) continue;
+            foreach (MineralType val in Enum.GetValues(typeof(MineralType))) {
+                if (val == MineralType.MaxNum) continue;
                 var s = _atlas.GetSprite(val.ToString());
                 if (s != null) {
                     _cache[(int)val] = s;
@@ -100,7 +72,7 @@ public class VeinView : MonoBehaviour, IPointerClickHandler
     public int Id { get; private set; }
     public int Pos { get; private set; }
 
-    [SerializeField] private int _type = (int)VeinType.MAX_NUM;
+    [SerializeField] private int _type = (int)MineralType.MaxNum;
     public int Type {
         get { return _type; }
         private set { _type = value; }
@@ -123,9 +95,9 @@ public class VeinView : MonoBehaviour, IPointerClickHandler
         SetPosition();
     }
 
-    private void SetImage(int type = (int)VeinType.MAX_NUM)
+    private void SetImage(int type = (int)MineralType.MaxNum)
     {
-        if (type == (int)VeinType.MAX_NUM)
+        if (type == (int)MineralType.MaxNum)
             type = Type;
         GetComponent<Image>().sprite = VeinSpriteCatalog.GetSprite(type);
     }
