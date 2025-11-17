@@ -1,0 +1,7 @@
+﻿using TMPro;
+using UnityEngine;
+
+public class Gold_Panel : MonoBehaviour
+{
+    [SerializeField] TextMeshProUGUI Gold_Text;
+}
