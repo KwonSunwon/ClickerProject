@@ -85,6 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1301059180885453488}
   - component: {fileID: 6786559057199782441}
+  - component: {fileID: 3820031941121265386}
   m_Layer: 5
   m_Name: UI_MineralPanel
   m_TagString: Untagged
@@ -139,6 +140,20 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &3820031941121265386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3669621375343891342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6c6f934d5e9abd41bc427f4ac89f5cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _image: {fileID: 6720669286020143450}
+  _text: {fileID: 5332595232645665682}
 --- !u!1 &6083887958232513874
 GameObject:
   m_ObjectHideFlags: 0

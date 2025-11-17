@@ -21,7 +21,7 @@ public class RockView : MonoBehaviour, IPointerClickHandler
     public void Bind(RockState data, Action<int> onClick)
     {
         _img = GetComponent<Image>();
-        _img.sprite = _spriteSet.sprites[0];
+        _img.sprite = _spriteSet.sprites[5];
 
         _collider = GetComponent<BoxCollider2D>();
         _collider.enabled = true;
@@ -36,8 +36,11 @@ public class RockView : MonoBehaviour, IPointerClickHandler
     {
         Debug.Log($"Rock {_id} Refreshed: Hp={data.Hp}, IsBroken={data.IsBroken}");
 
-        if (data.Hp < 6) _img.sprite = _spriteSet.sprites[data.Hp];
+        //if (data.Hp < 6) _img.sprite = _spriteSet.sprites[data.Hp];
+
         if (data.IsBroken) PlayBreak();
+        else
+            _img.sprite = _spriteSet.sprites[(data.Hp * 6) / data.MaxHp - 1];
     }
 
     public void OnPointerClick(PointerEventData eventData)
