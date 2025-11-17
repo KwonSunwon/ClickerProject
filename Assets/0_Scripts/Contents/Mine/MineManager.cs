@@ -141,7 +141,7 @@ public class MineManager : MonoBehaviour, ISaveHandler
     {
         Debug.Log($"Rock Clicked: {rockId}");
 
-        _domain.ClickRock(rockId, damage: 2);
+        _domain.ClickRock(rockId, damage: 1);
     }
 
     void OnVeinClick(int veinId)

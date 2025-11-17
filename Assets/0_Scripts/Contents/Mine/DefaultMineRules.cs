@@ -35,7 +35,7 @@ public class DefaultMineRules : IMineRules
 
     public int RockHpForDepth(int depth)
     {
-        //TODO: 임시로 고정 -> 깊이에 따라 증가하도록 변경
-        return 6;
+        //TODO: 밸런스 조정 필요
+        return Math.Max(6, (int)(depth * 0.5f));
     }
 }

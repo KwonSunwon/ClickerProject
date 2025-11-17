@@ -32,7 +32,7 @@ public class RockState
     public int Id;
     //public int Type;
     public int Hp;
-    //public int MaxHp;
+    public int MaxHp;   //NOTE: Line Depth에 따라 결정
     public bool IsBroken => Hp <= 0;
 }
 
@@ -154,7 +154,8 @@ public sealed class MineDomain
         for (int i = 0; i < _rules.RocksPerLine(); i++) {
             var rock = new RockState {
                 Id = MakeRockId(line.Depth, i),
-                Hp = _rules.RockHpForDepth(line.Depth)
+                Hp = _rules.RockHpForDepth(line.Depth),
+                MaxHp = _rules.RockHpForDepth(line.Depth)
             };
             line.Rocks.Add(rock);
         }
