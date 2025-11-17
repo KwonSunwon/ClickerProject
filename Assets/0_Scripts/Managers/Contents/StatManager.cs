@@ -1,9 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
 public class StatManager
 {
+	public BigNumber Gold;
+	public float Air=0;
+	public float MaxAir=100;
+	public int Depth;
 
 
 	public float IncreasedMineralYield = 0;
@@ -22,6 +27,7 @@ public class StatManager
 
 			AddStat(data.Function, data.StatPerLevel);
 		}
+
 	}
 
 	public void InitStat()
@@ -48,5 +54,20 @@ public class StatManager
 		field.SetValue(this, newValue);
 
 		Debug.Log($"[AddStat] {statName}: {current} → {newValue}");
+	}
+
+	//Todo: 제거하기
+	bool dir = false;
+	public void test() {
+		if (dir)
+		{
+			Air += Time.fixedDeltaTime*30;
+			if (Air > MaxAir) dir = !dir;
+		}
+		else
+		{
+			Air-=Time.fixedDeltaTime*30;
+			if(Air<0) dir = !dir;
+		}
 	}
 }
