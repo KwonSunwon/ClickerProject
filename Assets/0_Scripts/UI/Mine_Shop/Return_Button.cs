@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 public class Return_Button : MonoBehaviour, IPointerClickHandler
 {
 	[SerializeField] GameObject Parent_GO;
+
 	public void OnPointerClick(PointerEventData eventData)
 	{
 		PlayCloseAnimation();
@@ -16,6 +17,9 @@ public class Return_Button : MonoBehaviour, IPointerClickHandler
 		if (cg == null)
 			cg = Parent_GO.AddComponent<CanvasGroup>();
 
+		Vector3 defaultScale = Parent_GO.transform.localScale;
+		float defaultAlpha = cg.alpha;
+
 		Sequence seq = DOTween.Sequence();
 
 		// 1) 축소 + 페이드 아웃 동시에
@@ -25,7 +29,9 @@ public class Return_Button : MonoBehaviour, IPointerClickHandler
 		// 2) 끝나면 삭제
 		seq.OnComplete(() =>
 		{
-			Destroy(Parent_GO);
+			Parent_GO.transform.localScale = defaultScale;
+			cg.alpha = defaultAlpha;
+			Parent_GO.SetActive(false);
 		});
 	}
 }

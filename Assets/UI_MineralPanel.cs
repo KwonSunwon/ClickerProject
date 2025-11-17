@@ -2,43 +2,21 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_MineralPanel : UI_Base
+public class UI_MineralPanel : MonoBehaviour
 {
-    enum Texts
-    {
-		MineralAmountText
-	}
-    enum Images
-    {
-		MineralImage
-	}
-	public override void Init()
+	MineralSlot _mineralSlot;
+	[SerializeField] Image _image;
+	[SerializeField] TextMeshProUGUI _text;
+	public void SetSlot(MineralSlot slot)
 	{
+		_mineralSlot = slot;
+		_image.sprite = slot.Sprite;
+		_text.text = $"{slot.Amount}";
 	}
 
-	void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
-
-    public TextMeshProUGUI GetMineralText()
-    {
-        if (GetTMP((int)Texts.MineralAmountText) == null) { 
-			Bind<TextMeshProUGUI>(typeof(Texts));
-		}
-        return GetTMP((int)Texts.MineralAmountText);
-    }
-	public void SetMineralImage(Sprite sprite)
+	private void FixedUpdate()
 	{
-		if (GetImage((int)Images.MineralImage) == null)
-		{
-			Bind<Image>(typeof(Images));
-		}
-		GetImage((int)Images.MineralImage).sprite = sprite;
+		_text.text = $"{_mineralSlot.Amount}";
 	}
+
 }
