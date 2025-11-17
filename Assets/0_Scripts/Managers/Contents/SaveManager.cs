@@ -83,6 +83,6 @@ public class SaveManager
 
     private string GetSavePath()
     {
-        return Path.Combine(Application.persistentDataPath, "saveFile.sav");
+        return Path.Combine(Application.persistentDataPath, "saveFile.json");
     }
 }
