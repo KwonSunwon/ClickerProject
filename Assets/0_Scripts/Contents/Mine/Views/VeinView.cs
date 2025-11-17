@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public static class VeinSpriteCatalog
 {
-    private const string PATH = "Art/Ore/Ores";
+    private const string PATH = "Art/Veins/Veins";
     private static SpriteAtlas _atlas;
     private static readonly Dictionary<int, Sprite> _cache = new();
 
@@ -23,7 +23,7 @@ public static class VeinSpriteCatalog
 
             foreach (MineralType val in Enum.GetValues(typeof(MineralType))) {
                 if (val == MineralType.MaxNum) continue;
-                var s = _atlas.GetSprite(val.ToString());
+                var s = _atlas.GetSprite(val.ToString() + "_Vein");
                 if (s != null) {
                     _cache[(int)val] = s;
                 }
