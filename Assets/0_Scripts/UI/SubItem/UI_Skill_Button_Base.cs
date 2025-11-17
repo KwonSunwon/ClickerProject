@@ -110,6 +110,8 @@ public class UI_Skill_Button_Base : UI_Base
 			GameObject go = Managers.UI.MakeSubItem<UI_Cost_Image_Pack>(costBundle.transform).gameObject;
 			UI_Cost_Image_Pack ImageCost = go.GetOrAddComponent<UI_Cost_Image_Pack>();
 			ImageCost.SetCost(skillCost.cost);
+			MineralSlot slot = Managers.Mineral.GetSlot(skillCost.mineralType);
+			ImageCost.SetMineralImage(slot.Sprite);
 		}
 
 		gameObject.BindEvent(ClickedButton);

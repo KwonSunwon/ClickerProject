@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class SkillManager : ISaveHandler
 {
-    public Dictionary<int, SkillNodeData> SkillMap = new Dictionary<int, SkillNodeData>();
-    private Dictionary<int, ReincarnationNodeData> ReincarnationMap = new Dictionary<int, ReincarnationNodeData>();
-    public event Action UpdateSkillUI;
+	public Dictionary<int, SkillNodeData> SkillMap = new Dictionary<int, SkillNodeData>();
+	private Dictionary<int, ReincarnationNodeData> ReincarnationMap = new Dictionary<int, ReincarnationNodeData>();
+	public event Action UpdateSkillUI;
     public void Init()
     {
         Managers.Save.Register(this);
@@ -84,15 +84,16 @@ public class SkillManager : ISaveHandler
         return null;
     }
 
-    public ReincarnationNodeData GetReincarnation(int id)
-    {
-        if (ReincarnationMap.TryGetValue(id, out var reincarnation)) {
-            return reincarnation;
-        }
+	public ReincarnationNodeData GetReincarnation(int id)
+	{
+		if(ReincarnationMap.TryGetValue(id,out var reincarnation))
+		{
+			return reincarnation;
+		}
 
-        Debug.LogWarning($"reincarnation with Id {id} not found.");
-        return null;
-    }
+		Debug.LogWarning($"reincarnation with Id {id} not found.");
+		return null;
+	}
 
 
     //TODO: 순원 로컬에 배운 스킬 저장
@@ -101,102 +102,113 @@ public class SkillManager : ISaveHandler
         UpdateSkillUI?.Invoke();
     }
 
-    public bool ArePrerequisitesMet(SkillNodeData skill)
-    {
-        if (skill.precedingSkills == null || skill.precedingSkills.Count == 0)
-            return true;
+	public bool ArePrerequisitesMet(SkillNodeData skill)
+	{
+		if (skill.precedingSkills == null || skill.precedingSkills.Count == 0)
+			return true;
 
-        foreach (var preId in skill.precedingSkills) {
-            SkillNodeData preSkill = GetSkill(preId);
-            if (preSkill == null || preSkill.Level == 0)
-                return false;
-        }
-        return true;
-    }
+		foreach (var preId in skill.precedingSkills)
+		{
+			SkillNodeData preSkill = GetSkill(preId);
+			if (preSkill == null || preSkill.Level == 0)
+				return false;
+		}
+		return true;
+	}
 
-    public bool ArePrerequisitesMet(ReincarnationNodeData reincarnation)
-    {
-        if (reincarnation.precedingSkills == null || reincarnation.precedingSkills.Count == 0)
-            return true;
+	public bool ArePrerequisitesMet(ReincarnationNodeData reincarnation)
+	{
+		if (reincarnation.precedingSkills == null || reincarnation.precedingSkills.Count == 0)
+			return true;
 
-        foreach (var preId in reincarnation.precedingSkills) {
-            ReincarnationNodeData preSkill = GetReincarnation(preId);
-            if (preSkill == null || preSkill.Level == 0)
-                return false;
-        }
-        return true;
-    }
+		foreach (var preId in reincarnation.precedingSkills)
+		{
+			ReincarnationNodeData preSkill = GetReincarnation(preId);
+			if (preSkill == null || preSkill.Level == 0)
+				return false;
+		}
+		return true;
+	}
 
-    public bool TryPurchaseSkill(int id)
-    {
-        SkillNodeData skill = GetSkill(id);
-        if (skill == null) {
-            UnityEngine.Debug.LogWarning($"Skill with Id {id} not found.");
-            return false;
-        }
+	public bool TryPurchaseSkill(int id)
+	{
+		SkillNodeData skill = GetSkill(id);
+		if (skill == null)
+		{
+			UnityEngine.Debug.LogWarning($"Skill with Id {id} not found.");
+			return false;
+		}
 
-        // 이미 배운 스킬인지 체크
-        if (skill.Level > 0) {
-            UnityEngine.Debug.LogWarning($"Skill {skill.Name} already learned.");
-            return false;
-        }
-
-
-        // 1. 구매 가능한지 체크
-        foreach (var (mineralType, cost) in skill.SkillCost) {
-            if (Managers.Mineral.GetAmount(mineralType).CompareTo(cost) < 0) {
-                UnityEngine.Debug.LogWarning($"{skill.Name} 구매 실패: {mineralType} 부족");
-                return false; // 하나라도 부족하면 실패
-            }
-        }
-
-        // 2. 실제로 자원 차감
-        foreach (var (mineralType, cost) in skill.SkillCost) {
-            Managers.Mineral.Spend(mineralType, cost);
-        }
-
-        // 3. 스킬 레벨 올리기
-        skill.Level = 1; // 처음 배우는 경우 1로 설정 (혹은 += 1로 여러 레벨 가능)
-
-        UnityEngine.Debug.Log($"{skill.Name} 스킬 구매 성공!");
-        SaveSkills();
-        return true;
-    }
-
-    public bool TryPurchaseReincarnation(int id)
-    {
-        ReincarnationNodeData reincarnation = GetReincarnation(id);
-        if (reincarnation == null) {
-            UnityEngine.Debug.LogWarning($"reincarnation with Id {id} not found.");
-            return false;
-        }
-
-        // 이미 배운 스킬인지 체크
-        if (reincarnation.Level > 0) {
-            UnityEngine.Debug.LogWarning($"Skill {reincarnation.Name} already learned.");
-            return false;
-        }
+		// 이미 배운 스킬인지 체크
+		if (skill.Level > 0)
+		{
+			UnityEngine.Debug.LogWarning($"Skill {skill.Name} already learned.");
+			return false;
+		}
 
 
-        // 1. 구매 가능한지 체크
-        if (Managers.Mineral.ReincarnationCoin - reincarnation.SkillCost < 0) {
-            UnityEngine.Debug.LogWarning($"{reincarnation.Name} 구매 실패: 코인 부족");
-            return false; // 하나라도 부족하면 실패
-        }
+		// 1. 구매 가능한지 체크
+		foreach (var (mineralType, cost) in skill.SkillCost)
+		{
+			if (Managers.Mineral.GetAmount(mineralType).CompareTo(cost) < 0)
+			{
+				UnityEngine.Debug.LogWarning($"{skill.Name} 구매 실패: {mineralType} 부족");
+				return false; // 하나라도 부족하면 실패
+			}
+		}
+
+		// 2. 실제로 자원 차감
+		foreach (var (mineralType, cost) in skill.SkillCost)
+		{
+			Managers.Mineral.Spend(mineralType, cost);
+		}
+
+		// 3. 스킬 레벨 올리기
+		skill.Level = 1; // 처음 배우는 경우 1로 설정 (혹은 += 1로 여러 레벨 가능)
+
+		UnityEngine.Debug.Log($"{skill.Name} 스킬 구매 성공!");
+		SaveSkills();
+		Managers.Stat.CalcStat();
+		return true;
+	}
+
+	public bool TryPurchaseReincarnation(int id)
+	{
+		ReincarnationNodeData reincarnation = GetReincarnation(id);
+		if (reincarnation == null)
+		{
+			UnityEngine.Debug.LogWarning($"reincarnation with Id {id} not found.");
+			return false;
+		}
+
+		// 이미 배운 스킬인지 체크
+		if (reincarnation.Level > 0)
+		{
+			UnityEngine.Debug.LogWarning($"Skill {reincarnation.Name} already learned.");
+			return false;
+		}
 
 
-        // 2. 실제로 자원 차감
+		// 1. 구매 가능한지 체크
+		if (Managers.Mineral.ReincarnationCoin - reincarnation.SkillCost < 0)
+		{
+			UnityEngine.Debug.LogWarning($"{reincarnation.Name} 구매 실패: 코인 부족");
+			return false; // 하나라도 부족하면 실패
+		}
+		
 
-        Managers.Mineral.Spend(reincarnation.SkillCost);
+		// 2. 실제로 자원 차감
+
+		Managers.Mineral.Spend(reincarnation.SkillCost);
 
 
-        // 3. 스킬 레벨 올리기
-        reincarnation.Level = 1; // 처음 배우는 경우 1로 설정 (혹은 += 1로 여러 레벨 가능)
+		// 3. 스킬 레벨 올리기
+		reincarnation.Level = 1; // 처음 배우는 경우 1로 설정 (혹은 += 1로 여러 레벨 가능)
 
-        UnityEngine.Debug.Log($"{reincarnation.Name} 스킬 구매 성공!");
-        SaveSkills();
-        return true;
-    }
+		UnityEngine.Debug.Log($"{reincarnation.Name} 스킬 구매 성공!");
+		SaveSkills();
+		return true;
+	}
 
 
 
@@ -205,34 +217,34 @@ public class SkillManager : ISaveHandler
 
 public class SkillNodeData
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public int MaxLevel { get; set; }
+	public int Id { get; set; }
+	public string Name { get; set; }
+	public string Description { get; set; }
+	public int MaxLevel { get; set; }
+	
+
+	public List<(MineralType mineralType, BigNumber cost)> SkillCost { get; set; }
+	public List<int> precedingSkills { get; set; }
+	public List<int> Edges { get; set; }
+
+	public int Xpos {  get; set; }
+	public int Ypos { get; set; }
+	public int Level { get; set; } //0이라면 배우지 않은것
 
 
-    public List<(MineralType mineralType, BigNumber cost)> SkillCost { get; set; }
-    public List<int> precedingSkills { get; set; }
-    public List<int> Edges { get; set; }
-
-    public int Xpos { get; set; }
-    public int Ypos { get; set; }
-    public int Level { get; set; } //0이라면 배우지 않은것
-
-
-
-
+	public string Function { get; set; }
+	public float StatPerLevel { get; set; }
 }
 
 public class ReincarnationNodeData
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public int MaxLevel { get; set; }
-    public string Description { get; set; }
+	public int Id { get; set; }
+	public string Name { get; set; }
+	public int MaxLevel { get; set; }
+	public string Description { get; set; }
 
-    public int SkillCost { get; set; }
-    public List<int> precedingSkills { get; set; }
+	public int SkillCost { get; set; }
+	public List<int> precedingSkills { get; set; }
 
-    public int Level { get; set; } //0이라면 배우지 않은것
+	public int Level { get; set; } //0이라면 배우지 않은것
 }
