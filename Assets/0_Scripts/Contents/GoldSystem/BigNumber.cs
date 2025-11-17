@@ -163,4 +163,26 @@ public struct BigNumber : IComparable<BigNumber>
 		string unit = exponent < suffix.Length ? suffix[exponent] : $"e{exponent * 3}";
 		return $"{value:F2}{unit}";
 	}
+
+	public double ToDouble()
+	{
+		return value * Math.Pow(BaseNum, exponent); // BaseNum = 1000
+	}
+
+	public static BigNumber FromDouble(double d)
+	{
+		if (d <= 0)
+			return new BigNumber(0, 0);
+
+		int exp = 0;
+
+		// 1000 단위로 정규화
+		while (d >= 1000)
+		{
+			d /= 1000;
+			exp++;
+		}
+
+		return new BigNumber(d, exp);
+	}
 }
