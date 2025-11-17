@@ -8,33 +8,33 @@ using UnityEngine;
 [Serializable]
 public enum MineralType
 {
-    IronOre,
-    CopperOre,
-    Coal,
-    GoldNugget,
-    Salt,
-    Bauxite,
-    Lithium,
-    Diamond,
-    Ruby,
-    Sapphire,
-    Emerald,
-    Quartz,
-    Uranium,
-    XenonCrystal,
-    GammaStone,
-    QuantumFlux,
-    VoidCrystal,
-    DarkMatterShard,
-    StellarIron,
-    NebulaDust,
-    CosmicGlass,
-    NeutroniumOre,
-    AlienAlloy,
+	IronOre,
+	CopperOre,
+	Coal,
+	GoldNugget,
+	Salt,
+	Bauxite,
+	Lithium,
+	Diamond,
+	Ruby,
+	Sapphire,
+	Emerald,
+	Quartz,
+	Uranium,
+	XenonCrystal,
+	GammaStone,
+	QuantumFlux,
+	VoidCrystal,
+	DarkMatterShard,
+	StellarIron,
+	NebulaDust,
+	CosmicGlass,
+	NeutroniumOre,
+	AlienAlloy,
 
 
-    MaxNum
-    // 필요시 계속 추가 가능
+	MaxNum
+	// 필요시 계속 추가 가능
 }
 
 
@@ -42,33 +42,33 @@ public enum MineralType
 [Serializable]
 public class MineralSlot
 {
-    public MineralType Type;
-    public BigNumber Amount;
-    public BigNumber PerTick;
-    public TextMeshProUGUI Text; // UI 연결 (없어도 동작)
-    public Sprite Sprite;
+	public MineralType Type;
+	public BigNumber Amount;
+	public BigNumber PerTick;
+	public TextMeshProUGUI Text; // UI 연결 (없어도 동작)
+	public Sprite Sprite;
 
-    public MineralSlot(MineralType type, BigNumber startAmount, BigNumber startPerTick, TextMeshProUGUI text = null)
-    {
-        Type = type;
-        Amount = startAmount;
-        PerTick = startPerTick;
-        Text = text;
-        Sprite = Resources.Load<Sprite>($"Art/Ore/{type}");
-        if (Sprite == null) Debug.Log($"Art/Ore/{type}가 비어있습니다");
-    }
+	public MineralSlot(MineralType type, BigNumber startAmount, BigNumber startPerTick, TextMeshProUGUI text = null)
+	{
+		Type = type;
+		Amount = startAmount;
+		PerTick = startPerTick;
+		Text = text;
+		Sprite = Resources.Load<Sprite>($"Art/Ore/{type}");
+		if (Sprite == null) Debug.Log($"Art/Ore/{type}가 비어있습니다");
+	}
 }
 
 
 public class MineralManager : ISaveHandler
 {
 
-    private readonly Dictionary<MineralType, MineralSlot> _map = new Dictionary<MineralType, MineralSlot>();
+	private readonly Dictionary<MineralType, MineralSlot> _map = new Dictionary<MineralType, MineralSlot>();
 
-    //Test 코드(엄장헌) 1.0f로 바꿀예정
-    private float tickInterval = 0.01f;
+	//Test 코드(엄장헌) 1.0f로 바꿀예정
+	private float tickInterval = 0.01f;
 
-    int reincarnationCoin = 100;
+	int reincarnationCoin = 100;
 
     public void Init()
     {
@@ -76,25 +76,35 @@ public class MineralManager : ISaveHandler
         Managers.Save.Register(this);
 
         var slots = new List<MineralSlot>
-        {
-            new MineralSlot((MineralType)0, new BigNumber(200), new BigNumber(1000000000)),
-            new MineralSlot((MineralType)1, new BigNumber(100), new BigNumber(100000000)),
-            new MineralSlot((MineralType)2, new BigNumber(300), new BigNumber(10000000)),
-            new MineralSlot((MineralType)3, new BigNumber(300), new BigNumber(1000000)),
-            new MineralSlot((MineralType)4, new BigNumber(300), new BigNumber(100000)),
-            new MineralSlot((MineralType)5, new BigNumber(300), new BigNumber(10000)),
-            new MineralSlot((MineralType)6, new BigNumber(300), new BigNumber(5000)),
-            new MineralSlot((MineralType)7, new BigNumber(300), new BigNumber(4000)),
-            new MineralSlot((MineralType)8, new BigNumber(300), new BigNumber(2000)),
-            new MineralSlot((MineralType)9, new BigNumber(300), new BigNumber(1000)),
-            new MineralSlot((MineralType)10, new BigNumber(300), new BigNumber(500)),
-            new MineralSlot((MineralType)11, new BigNumber(300), new BigNumber(300)),
-            new MineralSlot((MineralType)12, new BigNumber(300), new BigNumber(100)),
-            new MineralSlot((MineralType)13, new BigNumber(300), new BigNumber(1)),
-        };
+            {
+                new MineralSlot((MineralType)0, new BigNumber(200), new BigNumber(1000000000)),
+                new MineralSlot((MineralType)1, new BigNumber(100), new BigNumber(100000000)),
+                new MineralSlot((MineralType)2, new BigNumber(300), new BigNumber(10000000)),
+                new MineralSlot((MineralType)3, new BigNumber(300), new BigNumber(1000000)),
+                new MineralSlot((MineralType)4, new BigNumber(300), new BigNumber(100000)),
+                new MineralSlot((MineralType)5, new BigNumber(300), new BigNumber(10000)),
+                new MineralSlot((MineralType)6, new BigNumber(300), new BigNumber(5000)),
+                new MineralSlot((MineralType)7, new BigNumber(300), new BigNumber(4000)),
+                new MineralSlot((MineralType)8, new BigNumber(300), new BigNumber(2000)),
+                new MineralSlot((MineralType)9, new BigNumber(300), new BigNumber(1000)),
+                new MineralSlot((MineralType)10, new BigNumber(300), new BigNumber(500)),
+                new MineralSlot((MineralType)11, new BigNumber(300), new BigNumber(300)),
+                new MineralSlot((MineralType)12, new BigNumber(300), new BigNumber(100)),
+                new MineralSlot((MineralType)13, new BigNumber(300), new BigNumber(1)),
+                new MineralSlot((MineralType)14, new BigNumber(300), new BigNumber(1)),
+                new MineralSlot((MineralType)15, new BigNumber(300), new BigNumber(1)),
+                new MineralSlot((MineralType)16, new BigNumber(300), new BigNumber(1)),
+                new MineralSlot((MineralType)17, new BigNumber(300), new BigNumber(1)),
+                new MineralSlot((MineralType)18, new BigNumber(300), new BigNumber(1)),
+                new MineralSlot((MineralType)19, new BigNumber(300), new BigNumber(1)),
+                new MineralSlot((MineralType)20, new BigNumber(300), new BigNumber(1)),
+                new MineralSlot((MineralType)21, new BigNumber(300), new BigNumber(1)),
+                new MineralSlot((MineralType)22, new BigNumber(300), new BigNumber(1)),
+            };
 
         _map.Clear();
-        foreach (var slot in slots) {
+        foreach (var slot in slots)
+        {
             _map[slot.Type] = slot;
             UpdateUIText(slot, 2);
         }
@@ -104,86 +114,90 @@ public class MineralManager : ISaveHandler
     }
 
 
-    public IEnumerator TickLoop()
-    {
-        var wait = new WaitForSeconds(tickInterval);
-        while (true) {
-            yield return wait;
-            OnTick();
-        }
-    }
+	public IEnumerator TickLoop()
+	{
+		var wait = new WaitForSeconds(tickInterval);
+		while (true)
+		{
+			yield return wait;
+			OnTick();
+		}
+	}
 
-    private void OnTick()
+	private void OnTick()
     {
-        foreach (var slot in _map.Values) {
+        foreach (var slot in _map.Values)
+        {
             slot.Amount += slot.PerTick;
             UpdateUIText(slot, 2);
         }
     }
-    public void UpdateUIText(MineralSlot slot, int decimals)
-    {
-        if (slot.Text != null)
-            slot.Text.SetBigNumber(slot.Amount, decimals);
-    }
+	public void UpdateUIText(MineralSlot slot, int decimals)
+	{
+		if (slot.Text != null)
+			slot.Text.SetBigNumber(slot.Amount, decimals);
+	}
 
 
-    #region Public API
-    public BigNumber GetAmount(MineralType type) => _map[type].Amount;
+	#region Public API
+	public BigNumber GetAmount(MineralType type) => _map[type].Amount;
 
-    public void Add(MineralType type, BigNumber amount)
-    {
-        var slot = _map[type];
-        slot.Amount += amount;
-        UpdateUIText(slot, 2);
-    }
+	public void Add(MineralType type, BigNumber amount)
+	{
+		var slot = _map[type];
+		slot.Amount += amount;
+		UpdateUIText(slot, 2);
+	}
 
-    public bool Spend(MineralType type, BigNumber cost)
-    {
-        var slot = _map[type];
-        if (slot.Amount.CompareTo(cost) < 0) return false;
+	public bool Spend(MineralType type, BigNumber cost)
+	{
+		var slot = _map[type];
+		if (slot.Amount.CompareTo(cost) < 0) return false;
 
-        slot.Amount -= cost;
-        UpdateUIText(slot, 2);
-        return true;
-    }
+		slot.Amount -= cost;
+		UpdateUIText(slot, 2);
+		return true;
+	}
 
-    public bool Spend(int cost)
-    {
-        if (reincarnationCoin - cost < 0) return false;
-        reincarnationCoin -= cost;
-        return true;
-    }
+	public bool Spend(int cost)
+	{
+		if (reincarnationCoin - cost < 0) return false;
+		reincarnationCoin -= cost;
+		return true;
+	}
 
-    public bool CanAfford(MineralType type, BigNumber cost)
-    {
-        return _map[type].Amount.CompareTo(cost) >= 0;
-    }
+	public bool CanAfford(MineralType type, BigNumber cost)
+	{
+		return _map[type].Amount.CompareTo(cost) >= 0;
+	}
 
-    public BigNumber GetPerTick(MineralType type) => _map[type].PerTick;
+	public BigNumber GetPerTick(MineralType type) => _map[type].PerTick;
 
-    public void SetPerTick(MineralType type, BigNumber perTick) => _map[type].PerTick = perTick;
+	public void SetPerTick(MineralType type, BigNumber perTick) => _map[type].PerTick = perTick;
 
-    public void ModifyPerTick(MineralType type, BigNumber delta) => _map[type].PerTick += delta;
+	public void ModifyPerTick(MineralType type, BigNumber delta) => _map[type].PerTick += delta;
 
-    public bool SpendBundle(params (MineralType type, BigNumber cost)[] costs)
-    {
-        foreach (var (type, cost) in costs) {
-            if (!CanAfford(type, cost)) return false;
-        }
-        foreach (var (type, cost) in costs) {
-            Spend(type, cost);
-        }
-        return true;
-    }
+	public bool SpendBundle(params (MineralType type, BigNumber cost)[] costs)
+	{
+		foreach (var (type, cost) in costs)
+		{
+			if (!CanAfford(type, cost)) return false;
+		}
+		foreach (var (type, cost) in costs)
+		{
+			Spend(type, cost);
+		}
+		return true;
+	}
 
-    public MineralSlot GetSlot(MineralType type)
-    {
-        if (_map.ContainsKey(type)) return _map[type];
-        else return null;
-    }
-    #endregion
-
-    public int ReincarnationCoin { get { return reincarnationCoin; } }
+	public MineralSlot GetSlot(MineralType type)
+	{
+		if (_map.ContainsKey(type)) return _map[type];
+		else return null;
+	}
+	#endregion
+	
+	public int ReincarnationCoin { get { return reincarnationCoin; }}
 
     #region Save/Load
     public bool OnSaveRequest(GlobalDTO dto)

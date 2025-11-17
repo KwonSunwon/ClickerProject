@@ -81,7 +81,11 @@ public class DataManager
 				Level = 0,
 				Xpos = dto.xPos,
 				Ypos = dto.yPos,
-				Edges = dto.Edges ?? new List<int>()
+				Edges = dto.Edges ?? new List<int>(),
+
+				Function = dto.Function,
+				StatPerLevel = dto.StatPerLevel
+
 			};
 
 			if (dto.skillCost != null)
