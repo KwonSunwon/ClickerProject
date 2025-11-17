@@ -2,9 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
-using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 
 [Serializable]
@@ -62,7 +60,7 @@ public class MineralSlot
 }
 
 
-public class MineralManager
+public class MineralManager : ISaveHandler
 {
 
 	private readonly Dictionary<MineralType, MineralSlot> _map = new Dictionary<MineralType, MineralSlot>();
@@ -72,46 +70,48 @@ public class MineralManager
 
 	int reincarnationCoin = 100;
 
-	public void Init()
-	{
-		//Todo: 세이브 데이터에서 값을 불러와서 연동할 예정
-		var slots = new List<MineralSlot>
-		{
-			new MineralSlot((MineralType)0, new BigNumber(200), new BigNumber(1000000000)),
-			new MineralSlot((MineralType)1, new BigNumber(100), new BigNumber(100000000)),
-			new MineralSlot((MineralType)2, new BigNumber(300), new BigNumber(10000000)),
-			new MineralSlot((MineralType)3, new BigNumber(300), new BigNumber(1000000)),
-			new MineralSlot((MineralType)4, new BigNumber(300), new BigNumber(100000)),
-			new MineralSlot((MineralType)5, new BigNumber(300), new BigNumber(10000)),
-			new MineralSlot((MineralType)6, new BigNumber(300), new BigNumber(5000)),
-			new MineralSlot((MineralType)7, new BigNumber(300), new BigNumber(4000)),
-			new MineralSlot((MineralType)8, new BigNumber(300), new BigNumber(2000)),
-			new MineralSlot((MineralType)9, new BigNumber(300), new BigNumber(1000)),
-			new MineralSlot((MineralType)10, new BigNumber(300), new BigNumber(500)),
-			new MineralSlot((MineralType)11, new BigNumber(300), new BigNumber(300)),
-			new MineralSlot((MineralType)12, new BigNumber(300), new BigNumber(100)),
-			new MineralSlot((MineralType)13, new BigNumber(300), new BigNumber(1)),
-			new MineralSlot((MineralType)14, new BigNumber(300), new BigNumber(1)),
-			new MineralSlot((MineralType)15, new BigNumber(300), new BigNumber(1)),
-			new MineralSlot((MineralType)16, new BigNumber(300), new BigNumber(1)),
-			new MineralSlot((MineralType)17, new BigNumber(300), new BigNumber(1)),
-			new MineralSlot((MineralType)18, new BigNumber(300), new BigNumber(1)),
-			new MineralSlot((MineralType)19, new BigNumber(300), new BigNumber(1)),
-			new MineralSlot((MineralType)20, new BigNumber(300), new BigNumber(1)),
-			new MineralSlot((MineralType)21, new BigNumber(300), new BigNumber(1)),
-			new MineralSlot((MineralType)22, new BigNumber(300), new BigNumber(1)),
-		};
+    public void Init()
+    {
+        //Todo: 세이브 데이터에서 값을 불러와서 연동할 예정
+        Managers.Save.Register(this);
 
-		_map.Clear();
-		foreach (var slot in slots)
-		{
-			_map[slot.Type] = slot;
-			UpdateUIText(slot, 2);
-		}
+        var slots = new List<MineralSlot>
+            {
+                new MineralSlot((MineralType)0, new BigNumber(200), new BigNumber(1000000000)),
+                new MineralSlot((MineralType)1, new BigNumber(100), new BigNumber(100000000)),
+                new MineralSlot((MineralType)2, new BigNumber(300), new BigNumber(10000000)),
+                new MineralSlot((MineralType)3, new BigNumber(300), new BigNumber(1000000)),
+                new MineralSlot((MineralType)4, new BigNumber(300), new BigNumber(100000)),
+                new MineralSlot((MineralType)5, new BigNumber(300), new BigNumber(10000)),
+                new MineralSlot((MineralType)6, new BigNumber(300), new BigNumber(5000)),
+                new MineralSlot((MineralType)7, new BigNumber(300), new BigNumber(4000)),
+                new MineralSlot((MineralType)8, new BigNumber(300), new BigNumber(2000)),
+                new MineralSlot((MineralType)9, new BigNumber(300), new BigNumber(1000)),
+                new MineralSlot((MineralType)10, new BigNumber(300), new BigNumber(500)),
+                new MineralSlot((MineralType)11, new BigNumber(300), new BigNumber(300)),
+                new MineralSlot((MineralType)12, new BigNumber(300), new BigNumber(100)),
+                new MineralSlot((MineralType)13, new BigNumber(300), new BigNumber(1)),
+                new MineralSlot((MineralType)14, new BigNumber(300), new BigNumber(1)),
+                new MineralSlot((MineralType)15, new BigNumber(300), new BigNumber(1)),
+                new MineralSlot((MineralType)16, new BigNumber(300), new BigNumber(1)),
+                new MineralSlot((MineralType)17, new BigNumber(300), new BigNumber(1)),
+                new MineralSlot((MineralType)18, new BigNumber(300), new BigNumber(1)),
+                new MineralSlot((MineralType)19, new BigNumber(300), new BigNumber(1)),
+                new MineralSlot((MineralType)20, new BigNumber(300), new BigNumber(1)),
+                new MineralSlot((MineralType)21, new BigNumber(300), new BigNumber(1)),
+                new MineralSlot((MineralType)22, new BigNumber(300), new BigNumber(1)),
+            };
 
-		// Tick 시작
-		CoroutineRunner.Instance.StartCoroutine(TickLoop());
-	}
+        _map.Clear();
+        foreach (var slot in slots)
+        {
+            _map[slot.Type] = slot;
+            UpdateUIText(slot, 2);
+        }
+
+        // Tick 시작
+        CoroutineRunner.Instance.StartCoroutine(TickLoop());
+    }
 
 
 	public IEnumerator TickLoop()
@@ -198,4 +198,16 @@ public class MineralManager
 	#endregion
 	
 	public int ReincarnationCoin { get { return reincarnationCoin; }}
+
+    #region Save/Load
+    public bool OnSaveRequest(GlobalDTO dto)
+    {
+        return Mineral.Mapper.MakeDTO(_map, out dto.Mineral);
+    }
+
+    public bool OnLoadRequest(GlobalDTO dto)
+    {
+        return Mineral.Mapper.ApplyFromDTO(dto.Mineral, _map);
+    }
+    #endregion
 }

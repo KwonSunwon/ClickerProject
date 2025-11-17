@@ -142,7 +142,7 @@ public class SecureDataManager
     }
 
     // --- 암호화/복호화 로직 ---
-    private byte[] Encrypt(string plainText)
+    public static byte[] Encrypt(string plainText)
     {
         using (Aes aes = Aes.Create()) {
             aes.Key = Key;
@@ -158,7 +158,7 @@ public class SecureDataManager
         }
     }
 
-    private string Decrypt(byte[] cipherText)
+    public string Decrypt(byte[] cipherText)
     {
         using (Aes aes = Aes.Create()) {
             aes.Key = Key;
