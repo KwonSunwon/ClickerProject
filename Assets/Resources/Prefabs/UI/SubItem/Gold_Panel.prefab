@@ -222,7 +222,6 @@ GameObject:
   - component: {fileID: 80039373800319218}
   - component: {fileID: 1326145616138702414}
   - component: {fileID: 92057895898646729}
-  - component: {fileID: 2215075864093130081}
   - component: {fileID: 2006555769639756771}
   m_Layer: 5
   m_Name: Gold_Panel
@@ -290,19 +289,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2215075864093130081
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8588884414155676409}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a934563b8b706ee4b9f245e90ad80e03, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Gold_Text: {fileID: 0}
 --- !u!114 &2006555769639756771
 MonoBehaviour:
   m_ObjectHideFlags: 0
