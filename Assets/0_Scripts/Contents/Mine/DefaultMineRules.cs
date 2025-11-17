@@ -23,7 +23,7 @@ public class DefaultMineRules : IMineRules
             } while (!occupied.Add(vein.Pos));
 
             // 3. 종류 결정
-            vein.Type = rng.Next(0, (int)VeinType.MAX_NUM - 1);
+            vein.Type = rng.Next(0, (int)MineralType.MaxNum - 1);
 
             veins.Add(vein);
         }
