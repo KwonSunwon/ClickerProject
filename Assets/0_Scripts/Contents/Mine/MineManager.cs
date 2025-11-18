@@ -325,18 +325,43 @@ public class MineManager : MonoBehaviour, ISaveHandler
     /// <summary>
     /// 깊이와 인덱스(0~14)로 해당 위치에 RockState를 찾음
     /// </summary>
-    public RockState GetRockAt(int depth, int index)
+    public RockState TryGetRockAt(int depth, int index)
     {
         return _state.Lines.Find(l => l.Depth == depth)?
             .Rocks?.Find(r => r.Id == Util.MakeRockId(depth, index));
     }
 
-    public void AttackRockAt(int depth, int index, int damage)
+    public void TryAttackRockAt(int depth, int index, int damage)
     {
-        var rock = GetRockAt(depth, index);
+        var rock = TryGetRockAt(depth, index);
         if (rock != null) {
             _domain.ClickRock(rock.Id, damage);
         }
+    }
+
+    public void TryAttackRockByState(RockState rock, int damage)
+    {
+        if (rock != null) {
+            _domain.ClickRock(rock.Id, damage);
+        }
+    }
+
+    public RockView TryGetRockViewAt(int depth, int index)
+    {
+        if (_lines.TryGetValue(depth, out var lineView)) {
+            if (lineView.TryGetRockView(Util.MakeRockId(depth, index), out var rockView)) {
+                return rockView;
+            }
+        }
+        return null;
+    }
+
+    public LineView TryGetLineView(int depth)
+    {
+        if (_lines.TryGetValue(depth, out var lineView)) {
+            return lineView;
+        }
+        return null;
     }
     #endregion
 }
