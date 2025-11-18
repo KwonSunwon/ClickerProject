@@ -321,5 +321,22 @@ public class MineManager : MonoBehaviour, ISaveHandler
         lineOut = null;
         return null;
     }
+
+    /// <summary>
+    /// 깊이와 인덱스(0~14)로 해당 위치에 RockState를 찾음
+    /// </summary>
+    public RockState GetRockAt(int depth, int index)
+    {
+        return _state.Lines.Find(l => l.Depth == depth)?
+            .Rocks?.Find(r => r.Id == Util.MakeRockId(depth, index));
+    }
+
+    public void AttackRockAt(int depth, int index, int damage)
+    {
+        var rock = GetRockAt(depth, index);
+        if (rock != null) {
+            _domain.ClickRock(rock.Id, damage);
+        }
+    }
     #endregion
 }
