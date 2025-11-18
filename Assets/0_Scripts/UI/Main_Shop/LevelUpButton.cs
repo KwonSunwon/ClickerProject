@@ -8,7 +8,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 public class LevelUpButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-
+	[SerializeField] private Main_Secne_Shop_Panel Panel;
 	private bool isPush =false;
 	private float timer = 0.0f;
 	Coroutine coroutine = null;
@@ -23,13 +23,14 @@ public class LevelUpButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 			timer += Time.deltaTime;
 			if (timer > 0.03f)
 			{
-				EXP_UP();
+				LevelUp();
 				timer = 0.0f;
 			}
 		}
 	}
-	public void EXP_UP()
+	public void LevelUp()
 	{
+		if (Panel.LevelUp() == false) return;
 		Debug.Log("Punch");
 		transform.DORewind();
 		transform.DOPunchScale(new Vector3(0.2f, 0.2f, 0.2f),0.25f);
@@ -37,7 +38,7 @@ public class LevelUpButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 		
 	public void OnPointerDown(PointerEventData eventData)
 	{
-		EXP_UP();
+		LevelUp();
 		coroutine = StartCoroutine(Push_coroutine());
 	}
 
