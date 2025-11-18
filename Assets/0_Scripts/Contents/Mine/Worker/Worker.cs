@@ -8,6 +8,8 @@ public class Worker : MonoBehaviour
 
     private const int MAX_INDEX = 14; // 한 라인 당 바위 개수 - 1
 
+    private short _direction = 1;   // 1: 오른쪽, -1: 왼쪽
+
     [SerializeField] private GameObject _mineManager;
     private MineManager _mm;
 
@@ -31,10 +33,11 @@ public class Worker : MonoBehaviour
     {
         var rock = _mm.GetRockAt(_targetRock.depth, _targetRock.index);
         if (rock == null || rock.IsBroken) {
-            _targetRock.index++;
-            if (_targetRock.index > MAX_INDEX) {
+            _targetRock.index += 1 * _direction;
+
+            if (_targetRock.index > MAX_INDEX || _targetRock.index < 0) {
                 _targetRock.depth++;
-                _targetRock.index = 0;
+                _direction = (short)(-_direction); // 방향 전환
             }
         }
         else {
