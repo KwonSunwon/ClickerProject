@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 78644307}
   - component: {fileID: 78644306}
   - component: {fileID: 78644308}
+  - component: {fileID: 78644309}
   m_Layer: 0
   m_Name: Worker
   m_TagString: Untagged
@@ -150,6 +151,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mineManager: {fileID: 507177622}
+  _targetPosition: {x: 0, y: 0}
+  _moveSpeed: 100
+  _digInterval: 0.1
 --- !u!224 &78644307
 RectTransform:
   m_ObjectHideFlags: 0
@@ -158,16 +162,16 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 78644305}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -9719.998}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 57.239994, y: 57.239994, z: 57.239994}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 507177623}
+  m_Father: {fileID: 1245649356}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -697.87006, y: -120.50477}
-  m_SizeDelta: {x: 2.56, y: 2.56}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &78644308
 SpriteRenderer:
@@ -224,6 +228,26 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &78644309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 78644305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 1
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!224 &139779255 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3501978213413658273, guid: 6830d7d9a4b0c0944aed4edd8a7dde93, type: 3}
@@ -795,7 +819,6 @@ RectTransform:
   m_Children:
   - {fileID: 1405456479}
   - {fileID: 1614261612}
-  - {fileID: 78644307}
   m_Father: {fileID: 808148249}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.05, y: 0}
@@ -2906,6 +2929,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 78644307}
   - {fileID: 5341274957948436642}
   - {fileID: 809258792748181883}
   - {fileID: 522200120}
