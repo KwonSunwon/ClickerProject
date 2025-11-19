@@ -31,6 +31,8 @@ public class Worker : MonoBehaviour
 
     private float _digTimer = 0.0f;
 
+    //TODO: Save/Load 함수 제작
+
     private void Start()
     {
         _mm = _mineManager.GetComponent<MineManager>();
@@ -112,6 +114,10 @@ public class Worker : MonoBehaviour
 
     private void UpdateTargetPosition()
     {
+        //FIXME: 맨 처음에 받는 타겟의 y 좌표가 항상 0으로 설정되는 문제가 있음
+        // 예상되는 원인으로는 해당 깊이의 LineView의 위치가 제대로 초기화되지 않아서 생기는 문제로 추측 중
+        // 상점에서 Worker 를 구매하는 방식으로 하는 경우에도 문제가 생기는지 확인 필요
+
         var rockView = _mm.TryGetRockViewAt(_target.depth, _target.index);
         var lineView = _mm.TryGetLineView(_target.depth);
 
