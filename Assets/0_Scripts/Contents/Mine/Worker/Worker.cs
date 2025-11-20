@@ -33,9 +33,14 @@ public class Worker : MonoBehaviour
 
     //TODO: Save/Load 함수 제작
 
+    public void Init(MineManager mm)
+    {
+        _mm ??= mm;
+    }
+
     private void Start()
     {
-        _mm = _mineManager.GetComponent<MineManager>();
+        _mm ??= _mineManager.GetComponent<MineManager>();
 
         _target.depth = 0;
         _target.index = 0;
@@ -43,12 +48,12 @@ public class Worker : MonoBehaviour
         GetComponent<RectTransform>().anchoredPosition = new Vector2(460.0f, -545.0f);
 
         //TODO: 임시 초기 타겟 설정, 추후 이 절차 없이 제대로된 타켓을 찾도록 수정 필요
-        _target = new Target() {
-            depth = 1,
-            index = 14,
-            rock = _mm.TryGetRockAt(1, 14),
-            position = new Vector2(1484.8f, -750.0f)
-        };
+        //_target = new Target() {
+        //    depth = 0,
+        //    index = 0,
+        //    rock = _mm.TryGetRockAt(1, 14),
+        //    position = new Vector2(1484.8f, -750.0f)
+        //};
     }
 
     private void Update()
@@ -94,7 +99,10 @@ public class Worker : MonoBehaviour
             return false;
 
         _mm.TryAttackRockByState(_target.rock, 1);
+
         //TODO: 애니메이션 및 이펙트 재생
+        //GetComponent<RectTransform>().DOShakePosition(0.2f, new Vector2(5.0f, 5.0f), 10, 90.0f);
+
         return true;
     }
 
