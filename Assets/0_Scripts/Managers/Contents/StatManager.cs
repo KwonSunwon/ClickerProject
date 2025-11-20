@@ -10,8 +10,30 @@ public class StatManager
 	public float MaxAir=100;
 	public int Depth;
 
+	//모든 광물 채굴 시 획득량 증가
+	public float Mine_Get_All = 0;
+	//모든 광물 채굴 시 두배 획득 확률
+	public float Mine_DoubleGet_All = 0;
+	//모든 광물 채굴 시 상위 광물 획득 확률
+	public float Mine_Upgrade_All = 0;
+	
+	
+	//클릭당 산소 소모량 감소율
+	public float Air_Efficiency_Click = 0;
+	//최대 산소량 증가
+	public float Air_Max_Inc = 0;
+	//클릭 시 산소 없이 채굴할 확률
+	public float Air_Free = 0;
 
-	public float IncreasedMineralYield = 0;
+
+	
+	//기계 채굴 속도 증가
+	public float Machine_Speed_Inc= 0;
+	//기계 채굴량 증가
+	public float Machine_Get_Inc = 0;
+	
+	
+
 	public void CalcStat()
 	{
 		InitStat();
@@ -21,6 +43,8 @@ public class StatManager
 		{
 			int id = pair.Key;
 			SkillNodeData data = pair.Value;
+				
+			if(data.Level == 0) continue;
 
 			if (string.IsNullOrWhiteSpace(data.Function))
 				continue;
@@ -32,7 +56,7 @@ public class StatManager
 
 	public void InitStat()
 	{
-		IncreasedMineralYield = 0;
+		Mine_Get_All = 0;
 	}
 
 	public void AddStat(string statName, float statInc)
