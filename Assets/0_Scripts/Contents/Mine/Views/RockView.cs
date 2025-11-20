@@ -39,8 +39,9 @@ public class RockView : MonoBehaviour, IPointerClickHandler
         //if (data.Hp < 6) _img.sprite = _spriteSet.sprites[data.Hp];
 
         if (data.IsBroken) PlayBreak();
-        else
-            _img.sprite = _spriteSet.sprites[(data.Hp * 6) / data.MaxHp - 1];
+        else {
+            _img.sprite = _spriteSet.sprites[Math.Clamp((data.Hp * 6) / data.MaxHp - 1, 0, 5)];
+        }
     }
 
     public void OnPointerClick(PointerEventData eventData)
