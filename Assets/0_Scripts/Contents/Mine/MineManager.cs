@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 
 /// <summary>
 /// MineData, MineUI 관리
 /// Mine에 object를 추가하고 제거하는 모든 작업을 여기에 요청해서 처리
 /// </summary>
+[DisallowMultipleComponent]
 public class MineManager : MonoBehaviour, ISaveHandler
 {
+    public static MineManager Instance { get; private set; }
+
     [SerializeField] private Transform lineContainer;
     [SerializeField] private Transform lineAddPosition;
 
@@ -17,11 +19,14 @@ public class MineManager : MonoBehaviour, ISaveHandler
     // <Depth, View>
     private readonly Dictionary<int, LineView> _lines = new();
 
-    private string SAVE_PATH;
-
     void Awake()
     {
-        SAVE_PATH = Path.Combine(Application.persistentDataPath, "save_mine.json");
+        if (Instance != null && Instance != this) {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        Instance = this;
 
         #region CreateTempState 
 
@@ -362,6 +367,14 @@ public class MineManager : MonoBehaviour, ISaveHandler
             return lineView;
         }
         return null;
+    }
+    #endregion
+
+    #region Worker Robot
+    public void SpawnWorker()
+    {
+        var worker = Managers.Resource.Instantiate("Worker", lineContainer);
+        worker.GetComponent<Worker>().Init(this);
     }
     #endregion
 }
