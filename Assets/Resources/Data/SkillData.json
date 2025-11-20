@@ -11,7 +11,7 @@
       "Edges": [],
       "xPos": 0,
       "yPos": 200,
-      "Function":"IncreasedMineralYield",
+      "Function":"Mine_Buff_All",
       "StatPerLevel":10
     },
     {
@@ -26,7 +26,7 @@
       "Edges": [3],
       "xPos": -200,
       "yPos": 400,
-      "Function":"",
+      "Function":"IncreasedMineralYield",
       "StatPerLevel":10
       
     },
