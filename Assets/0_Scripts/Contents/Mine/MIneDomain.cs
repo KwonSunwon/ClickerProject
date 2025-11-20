@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-
 using static Util;
 
 #region State Classes
@@ -9,6 +8,7 @@ public class MineState
 {
     public string Id;
     public int CurrentDepth;
+    public int UnclearedLineCount;
     public List<LineState> Lines = new();
 }
 
@@ -50,6 +50,8 @@ public interface IMineRules
 
     public int RocksPerLine();
     public int RockHpForDepth(int depth);
+
+    public int GetLineMaintainCount();
 }
 
 public sealed class MineDomain
@@ -70,6 +72,17 @@ public sealed class MineDomain
         _state = state;
         _rules = rules;
         _rng = new(seed);
+
+        CalculateUnclearedLineCount();
+    }
+
+    private void CalculateUnclearedLineCount()
+    {
+        foreach (var line in _state.Lines) {
+            if (!IsCleared(line)) {
+                _state.UnclearedLineCount++;
+            }
+        }
     }
 
     public void BreakIfHpZero()
@@ -102,7 +115,11 @@ public sealed class MineDomain
                 OnLineClear?.Invoke(line.Depth);
                 //NOTE: 클리어된 다음 라인을 TopLine으로 설정해 클릭 가능하도록
                 _state.Lines[line.Depth + 1].IsTopLine = true;
-                ExtendLine(line);
+
+                _state.UnclearedLineCount--;
+                if (_state.UnclearedLineCount <= 1) {
+                    ExtendLine(line);
+                }
             }
         }
     }
@@ -125,12 +142,13 @@ public sealed class MineDomain
 
     private bool IsCleared(LineState line)
     {
-        return line.Rocks.TrueForAll(r => r.IsBroken);
+        return line.Rocks.TrueForAll(r => r.IsBroken) || line.Rocks == null;
     }
 
     private void ClearRock(LineState line)
     {
         //NOTE: 이 두 라인이 실행되어야 State에 있는 Rocks도 메모리를 차지하지 않고 제거됨
+        if (line.Rocks == null) return;
         line.Rocks.Clear();
         line.Rocks = null;
     }
@@ -139,11 +157,14 @@ public sealed class MineDomain
     {
         Debug.Log($"Line {line.Depth} Cleared, Adding New Line");
 
-        //NOTE: 맨 아래에 새로운 라인 추가
-        var newDepth = _state.Lines[^1].Depth + 1;
-        _state.Lines.Add(MakeNewLine(newDepth));
-        _state.CurrentDepth = newDepth;
-        OnLineAdded?.Invoke(newDepth);
+        do {
+            //NOTE: 맨 아래에 새로운 라인 추가
+            var newDepth = _state.Lines[^1].Depth + 1;
+            _state.Lines.Add(MakeNewLine(newDepth));
+            _state.CurrentDepth = newDepth;
+            OnLineAdded?.Invoke(newDepth);
+            _state.UnclearedLineCount++;
+        } while (_state.UnclearedLineCount != _rules.GetLineMaintainCount());
     }
 
     private LineState MakeNewLine(int depth)

@@ -38,4 +38,6 @@ public class DefaultMineRules : IMineRules
         //TODO: 밸런스 조정 필요
         return Math.Max(6, (int)(depth * 0.5f));
     }
+
+    public int GetLineMaintainCount() => 4;
 }
