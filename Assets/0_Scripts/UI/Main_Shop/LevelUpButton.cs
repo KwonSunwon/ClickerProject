@@ -29,8 +29,6 @@ public class LevelUpButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         Debug.Log("Punch");
         transform.DORewind();
         transform.DOPunchScale(new Vector3(0.2f, 0.2f, 0.2f), 0.25f);
-
-        MineManager.Instance.SpawnWorker();
     }
 
     public void OnPointerDown(PointerEventData eventData)
