@@ -96,7 +96,14 @@ public sealed class MineDomain
 
         if (rock.IsBroken) {
             OnRockBroken?.Invoke(rock.Id);
-            TryExtendLineIfCleared(line);
+
+            if (IsCleared(line)) {
+                ClearRock(line);
+                OnLineClear?.Invoke(line.Depth);
+                //NOTE: 클리어된 다음 라인을 TopLine으로 설정해 클릭 가능하도록
+                _state.Lines[line.Depth + 1].IsTopLine = true;
+                ExtendLine(line);
+            }
         }
     }
 
@@ -116,26 +123,27 @@ public sealed class MineDomain
         OnVeinClicked?.Invoke(vein.Id, 1);
     }
 
-    private void TryExtendLineIfCleared(LineState line)
+    private bool IsCleared(LineState line)
     {
-        if (line.Rocks.TrueForAll(r => r.IsBroken)) {
-            Debug.Log($"Line {line.Depth} Cleared, Adding New Line");
+        return line.Rocks.TrueForAll(r => r.IsBroken);
+    }
 
-            //NOTE: 이 두 라인이 실행되어야 State에 있는 Rocks도 메모리를 차지하지 않고 제거됨
-            line.Rocks.Clear();
-            line.Rocks = null;
+    private void ClearRock(LineState line)
+    {
+        //NOTE: 이 두 라인이 실행되어야 State에 있는 Rocks도 메모리를 차지하지 않고 제거됨
+        line.Rocks.Clear();
+        line.Rocks = null;
+    }
 
-            OnLineClear?.Invoke(line.Depth);
+    private void ExtendLine(LineState line)
+    {
+        Debug.Log($"Line {line.Depth} Cleared, Adding New Line");
 
-            //NOTE: 클리어된 다음 라인을 TopLine으로 설정해 클릭 가능하도록
-            _state.Lines[line.Depth + 1].IsTopLine = true;
-
-            //NOTE: 맨 아래에 새로운 라인 추가
-            var newDepth = _state.Lines[^1].Depth + 1;
-            _state.Lines.Add(MakeNewLine(newDepth));
-            _state.CurrentDepth = newDepth;
-            OnLineAdded?.Invoke(newDepth);
-        }
+        //NOTE: 맨 아래에 새로운 라인 추가
+        var newDepth = _state.Lines[^1].Depth + 1;
+        _state.Lines.Add(MakeNewLine(newDepth));
+        _state.CurrentDepth = newDepth;
+        OnLineAdded?.Invoke(newDepth);
     }
 
     private LineState MakeNewLine(int depth)

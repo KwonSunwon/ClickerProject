@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 
 /// <summary>
 /// MineData, MineUI 관리
 /// Mine에 object를 추가하고 제거하는 모든 작업을 여기에 요청해서 처리
 /// </summary>
+[DisallowMultipleComponent]
 public class MineManager : MonoBehaviour, ISaveHandler
 {
+    public static MineManager Instance { get; private set; }
+
     [SerializeField] private Transform lineContainer;
     [SerializeField] private Transform lineAddPosition;
 
@@ -17,11 +19,14 @@ public class MineManager : MonoBehaviour, ISaveHandler
     // <Depth, View>
     private readonly Dictionary<int, LineView> _lines = new();
 
-    private string SAVE_PATH;
-
     void Awake()
     {
-        SAVE_PATH = Path.Combine(Application.persistentDataPath, "save_mine.json");
+        if (Instance != null && Instance != this) {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        Instance = this;
 
         #region CreateTempState 
 
@@ -320,6 +325,56 @@ public class MineManager : MonoBehaviour, ISaveHandler
         }
         lineOut = null;
         return null;
+    }
+
+    /// <summary>
+    /// 깊이와 인덱스(0~14)로 해당 위치에 RockState를 찾음
+    /// </summary>
+    public RockState TryGetRockAt(int depth, int index)
+    {
+        return _state.Lines.Find(l => l.Depth == depth)?
+            .Rocks?.Find(r => r.Id == Util.MakeRockId(depth, index));
+    }
+
+    public void TryAttackRockAt(int depth, int index, int damage)
+    {
+        var rock = TryGetRockAt(depth, index);
+        if (rock != null) {
+            _domain.ClickRock(rock.Id, damage);
+        }
+    }
+
+    public void TryAttackRockByState(RockState rock, int damage)
+    {
+        if (rock != null) {
+            _domain.ClickRock(rock.Id, damage);
+        }
+    }
+
+    public RockView TryGetRockViewAt(int depth, int index)
+    {
+        if (_lines.TryGetValue(depth, out var lineView)) {
+            if (lineView.TryGetRockView(Util.MakeRockId(depth, index), out var rockView)) {
+                return rockView;
+            }
+        }
+        return null;
+    }
+
+    public LineView TryGetLineView(int depth)
+    {
+        if (_lines.TryGetValue(depth, out var lineView)) {
+            return lineView;
+        }
+        return null;
+    }
+    #endregion
+
+    #region Worker Robot
+    public void SpawnWorker()
+    {
+        var worker = Managers.Resource.Instantiate("Worker", lineContainer);
+        worker.GetComponent<Worker>().Init(this);
     }
     #endregion
 }
