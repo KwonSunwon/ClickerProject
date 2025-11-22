@@ -36,7 +36,10 @@ public class DefaultMineRules : IMineRules
     public int RockHpForDepth(int depth)
     {
         //TODO: 밸런스 조정 필요
-        return Math.Max(6, (int)(depth * 0.5f));
+        //return Math.Max(6, (int)(depth * 0.5f));
+
+        var finalHp = (int)(100 * (1 + 0.015f * depth * depth));
+        return finalHp;
     }
 
     public int GetLineMaintainCount() => 4;

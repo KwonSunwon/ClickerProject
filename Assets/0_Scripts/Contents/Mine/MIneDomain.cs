@@ -181,10 +181,11 @@ public sealed class MineDomain
     {
         line.Rocks = new();
         for (int i = 0; i < _rules.RocksPerLine(); i++) {
+            var maxHp = _rules.RockHpForDepth(line.Depth);
             var rock = new RockState {
                 Id = MakeRockId(line.Depth, i),
-                Hp = _rules.RockHpForDepth(line.Depth),
-                MaxHp = _rules.RockHpForDepth(line.Depth)
+                MaxHp = maxHp,
+                Hp = maxHp
             };
             line.Rocks.Add(rock);
         }
