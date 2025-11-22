@@ -10,8 +10,10 @@ public class MineManager : MonoBehaviour, ISaveHandler
 {
     public static MineManager Instance { get; private set; }
 
-    [SerializeField] private Transform lineContainer;
-    [SerializeField] private Transform lineAddPosition;
+    [SerializeField] private Transform _lineContainer;
+    [SerializeField] private Transform _lineAddPosition;
+
+    private Transform _lastLineGroup;
 
     private MineState _state;
     private MineDomain _domain;
@@ -258,7 +260,7 @@ public class MineManager : MonoBehaviour, ISaveHandler
         //NOTE: Canvas 강제 갱신
         Canvas.ForceUpdateCanvases();
         //NOTE: 기존 UI 제거
-        foreach (Transform child in lineContainer) {
+        foreach (Transform child in _lineContainer) {
             if (child.GetComponent<LineView>() != null)
                 Destroy(child.gameObject);
         }
@@ -274,28 +276,28 @@ public class MineManager : MonoBehaviour, ISaveHandler
     void AddLineView(LineState line)
     {
         var lineView = SpawnLineView(line);
-        lineView.transform.SetParent(lineContainer, false);
-        lineView.transform.SetSiblingIndex(lineAddPosition.GetSiblingIndex());
+        lineView.transform.SetParent(_lineContainer, false);
+        lineView.transform.SetSiblingIndex(_lineAddPosition.GetSiblingIndex());
         _lines[line.Depth] = lineView;
     }
 
     LineView SpawnLineView(LineState line)
     {
-        var lineView = Managers.Resource.Instantiate("UI/SubItem/LineView").GetOrAddComponent<LineView>();
+        var lineView = Managers.Resource.Instantiate("UI/Mine/LineView").GetOrAddComponent<LineView>();
         lineView.BuildFrom(line, SpawnRockView, SpawnVeinView);
         return lineView;
     }
 
     RockView SpawnRockView(RockState rock)
     {
-        var rockView = Managers.Resource.Instantiate("UI/SubItem/RockView").GetOrAddComponent<RockView>();
+        var rockView = Managers.Resource.Instantiate("UI/Mine/RockView").GetOrAddComponent<RockView>();
         rockView.Bind(rock, OnRockClicked);
         return rockView;
     }
 
     VeinView SpawnVeinView(VeinState vein)
     {
-        var veinView = Managers.Resource.Instantiate("UI/SubItem/VeinView").GetOrAddComponent<VeinView>();
+        var veinView = Managers.Resource.Instantiate("UI/Mine/VeinView").GetOrAddComponent<VeinView>();
         veinView.Bind(vein, OnVeinClick);
         return veinView;
     }
@@ -401,7 +403,7 @@ public class MineManager : MonoBehaviour, ISaveHandler
     #region Worker Robot
     public void SpawnWorker()
     {
-        var worker = Managers.Resource.Instantiate("Worker", lineContainer);
+        var worker = Managers.Resource.Instantiate("Worker", _lineContainer);
         worker.GetComponent<Worker>().Init(this);
     }
     #endregion
