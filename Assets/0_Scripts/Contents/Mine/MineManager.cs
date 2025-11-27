@@ -173,6 +173,7 @@ public class MineManager : MonoBehaviour, ISaveHandler
         // Oxygen Timer
         _oxygenTimer = gameObject.AddComponent<OxygenTimer>();
         _oxygenTimer.OnOxygenDepleted += HandleOxygenDepleted;
+        _oxygenTimer.OnOxygenChanged += HandleOxygenChanged;
     }
 
     void Start()
@@ -196,7 +197,7 @@ public class MineManager : MonoBehaviour, ISaveHandler
 
     public void StartMining()
     {
-        _oxygenTimer.StartTimer(totalOxygen: 5f); //TODO: 테스트로 직접 시간 설정
+        _oxygenTimer.StartTimer(totalOxygen: 100f); //TODO: 테스트로 직접 시간 설정
     }
 
     #region EventHandlers
@@ -268,6 +269,11 @@ public class MineManager : MonoBehaviour, ISaveHandler
     private void HandleOxygenDepleted()
     {
         Debug.Log("Oxygen Depleted! Round Over.");
+    }
+
+    private void HandleOxygenChanged(float current)
+    {
+        Managers.Stat.Air = current;
     }
     #endregion
 

@@ -669,6 +669,7 @@ GameObject:
   - component: {fileID: 507177625}
   - component: {fileID: 507177624}
   - component: {fileID: 507177627}
+  - component: {fileID: 507177628}
   m_Layer: 6
   m_Name: Mine
   m_TagString: Untagged
@@ -779,6 +780,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _lineContainer: {fileID: 1245649356}
   _lineAddPosition: {fileID: 522200120}
+--- !u!114 &507177628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 507177622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8566211cee889014ca22fe80d1fef255, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &510400148
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2086,6 +2099,14 @@ PrefabInstance:
     - target: {fileID: 132536, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_Name
       value: IngameDebugConsole
+      objectReference: {fileID: 0}
+    - target: {fileID: 11440770, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
+      propertyPath: m_ReferenceResolution.x
+      value: 1920
+      objectReference: {fileID: 0}
+    - target: {fileID: 11440770, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
+      propertyPath: m_ReferenceResolution.y
+      value: 1080
       objectReference: {fileID: 0}
     - target: {fileID: 22426080, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_AnchorMax.x
@@ -3434,7 +3455,7 @@ GameObject:
   - component: {fileID: 1545542153}
   - component: {fileID: 1545542152}
   - component: {fileID: 1545542151}
-  - component: {fileID: 1545542150}
+  - component: {fileID: 1545542154}
   m_Layer: 5
   m_Name: MiningStartBtn
   m_TagString: Untagged
@@ -3462,18 +3483,6 @@ RectTransform:
   m_AnchoredPosition: {x: -668, y: 490}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1545542150
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1545542148}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3ee28a6a06068f4fba142e8e5ca2808, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1545542151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3556,6 +3565,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1545542148}
   m_CullTransparentMesh: 1
+--- !u!114 &1545542154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1545542148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 559fac3ac41168e4f891fa04456396f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1614261611
 GameObject:
   m_ObjectHideFlags: 0
