@@ -183,6 +183,11 @@ public class MineManager : MonoBehaviour, ISaveHandler
 
     void OnRockClicked(int rockId)
     {
+        if (_oxygenTimer.IsOxygenDepleted) {
+            Debug.Log("@MineManager - Oxygen Depleted - Cannot Click Rock");
+            return;
+        }
+
         Debug.Log($"Rock Clicked: {rockId}");
 
         _domain.ClickRock(rockId, damage: 10);
@@ -190,6 +195,11 @@ public class MineManager : MonoBehaviour, ISaveHandler
 
     void OnVeinClick(int veinId)
     {
+        if (_oxygenTimer.IsOxygenDepleted) {
+            Debug.Log("@MineManager - Oxygen Depleted - Cannot Click Vein");
+            return;
+        }
+
         Debug.Log($"Vein Clicked: {veinId}");
 
         _domain.ClickVein(veinId, damage: 1);
@@ -197,7 +207,7 @@ public class MineManager : MonoBehaviour, ISaveHandler
 
     public void StartMining()
     {
-        _oxygenTimer.StartTimer(totalOxygen: 100f); //TODO: 테스트로 직접 시간 설정
+        _oxygenTimer.StartTimer(totalOxygen: 5f); //TODO: 테스트로 직접 시간 설정
     }
 
     #region EventHandlers
@@ -393,6 +403,11 @@ public class MineManager : MonoBehaviour, ISaveHandler
 
     public void TryAttackRockAt(int depth, int index, int damage)
     {
+        if (_oxygenTimer.IsOxygenDepleted) {
+            Debug.Log("@MineManager - WorkerRobot - Oxygen Depleted - Cannot Attack Rock");
+            return;
+        }
+
         var rock = TryGetRockAt(depth, index);
         if (rock != null) {
             _domain.ClickRock(rock.Id, damage);
@@ -401,6 +416,11 @@ public class MineManager : MonoBehaviour, ISaveHandler
 
     public void TryAttackRockByState(RockState rock, int damage)
     {
+        if (_oxygenTimer.IsOxygenDepleted) {
+            Debug.Log("@MineManager - WorkerRobot - Oxygen Depleted - Cannot Attack Rock");
+            return;
+        }
+
         if (rock != null) {
             _domain.ClickRock(rock.Id, damage);
         }

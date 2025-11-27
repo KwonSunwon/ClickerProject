@@ -57,14 +57,14 @@ public class RockView : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log($"Rock {_id} Clicked");
+        //Debug.Log($"Rock {_id} Clicked");
 
         OnClick?.Invoke(_id);
     }
 
     public void PlayBreak()
     {
-        Debug.Log($"Rock {_id} Broken");
+        //Debug.Log($"Rock {_id} Broken");
 
         _img.enabled = false;
         _collider.enabled = false;
