@@ -21,6 +21,9 @@ public class MineManager : MonoBehaviour, ISaveHandler
     // <Depth, View>
     private readonly Dictionary<int, LineView> _lines = new();
 
+    // Oxygen Timer
+    private OxygenTimer _oxygenTimer;
+
     void Awake()
     {
         if (Instance != null && Instance != this) {
@@ -166,7 +169,12 @@ public class MineManager : MonoBehaviour, ISaveHandler
 
         ReBuildAll();
         _domain.BreakIfHpZero();
+
+        // Oxygen Timer
+        _oxygenTimer = gameObject.AddComponent<OxygenTimer>();
+        _oxygenTimer.OnOxygenDepleted += HandleOxygenDepleted;
     }
+
     void Start()
     {
         Managers.Save.Register(this);
@@ -184,6 +192,11 @@ public class MineManager : MonoBehaviour, ISaveHandler
         Debug.Log($"Vein Clicked: {veinId}");
 
         _domain.ClickVein(veinId, damage: 1);
+    }
+
+    public void StartMining()
+    {
+        _oxygenTimer.StartTimer(totalOxygen: 5f); //TODO: 테스트로 직접 시간 설정
     }
 
     #region EventHandlers
@@ -249,6 +262,12 @@ public class MineManager : MonoBehaviour, ISaveHandler
     private void HandleLineClear(int lineDepth)
     {
         _lines[lineDepth].RemoveRock();
+    }
+
+    // Oxygen Depleted Event Handler
+    private void HandleOxygenDepleted()
+    {
+        Debug.Log("Oxygen Depleted! Round Over.");
     }
     #endregion
 
