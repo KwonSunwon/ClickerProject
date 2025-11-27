@@ -16,6 +16,7 @@ public class OxygenTimer : MonoBehaviour
     public event Action<float> OnOxygenChanged;
 
     private bool _isRunning = false;
+    public bool IsOxygenDepleted => !_isRunning;
 
     public void StartTimer(float totalOxygen = 0)
     {
