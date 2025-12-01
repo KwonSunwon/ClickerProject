@@ -10,14 +10,19 @@ public class MineManager : MonoBehaviour, ISaveHandler
 {
     public static MineManager Instance { get; private set; }
 
-    [SerializeField] private Transform lineContainer;
-    [SerializeField] private Transform lineAddPosition;
+    [SerializeField] private Transform _lineContainer;
+    [SerializeField] private Transform _lineAddPosition;
+
+    private Transform _lastLineGroup;
 
     private MineState _state;
     private MineDomain _domain;
 
     // <Depth, View>
     private readonly Dictionary<int, LineView> _lines = new();
+
+    // Oxygen Timer
+    private OxygenTimer _oxygenTimer;
 
     void Awake()
     {
@@ -40,27 +45,27 @@ public class MineManager : MonoBehaviour, ISaveHandler
             var line = new Mine.LineDTO {
                 Depth = 0,
                 IsTopLine = true,
-                Rocks = null,
-                //Rocks = new() {
-                //new Mine.RockDTO { Id = "001", Hp = 3 },
-                //new Mine.RockDTO { Id = "002", Hp = 0 },
-                //new Mine.RockDTO { Id = "003", Hp = 5 },
-                //new Mine.RockDTO { Id = "004", Hp = 5 },
-                //new Mine.RockDTO { Id = "005", Hp = 0 },
-                //new Mine.RockDTO { Id = "006", Hp = 4 },
-                //new Mine.RockDTO { Id = "007", Hp = 2 },
-                //new Mine.RockDTO { Id = "008", Hp = 3 },
-                //new Mine.RockDTO { Id = "009", Hp = 0 },
-                //new Mine.RockDTO { Id = "00A", Hp = 2 },
-                //new Mine.RockDTO { Id = "00B", Hp = 1 },
-                //new Mine.RockDTO { Id = "00C", Hp = 5 },
-                //new Mine.RockDTO { Id = "00D", Hp = 4 },
-                //new Mine.RockDTO { Id = "00E", Hp = 2 },
-                //new Mine.RockDTO { Id = "00F", Hp = 1 }
-                //},
+                //Rocks = null,
+                Rocks = new() {
+                new Mine.RockDTO { Id = "001", Hp = 0 },
+                new Mine.RockDTO { Id = "002", Hp = 0 },
+                new Mine.RockDTO { Id = "003", Hp = 0 },
+                new Mine.RockDTO { Id = "004", Hp = 0 },
+                new Mine.RockDTO { Id = "005", Hp = 0 },
+                new Mine.RockDTO { Id = "006", Hp = 0 },
+                new Mine.RockDTO { Id = "007", Hp = 0 },
+                new Mine.RockDTO { Id = "008", Hp = 0 },
+                new Mine.RockDTO { Id = "009", Hp = 0 },
+                new Mine.RockDTO { Id = "00A", Hp = 0 },
+                new Mine.RockDTO { Id = "00B", Hp = 0 },
+                new Mine.RockDTO { Id = "00C", Hp = 6 },
+                new Mine.RockDTO { Id = "00D", Hp = 6 },
+                new Mine.RockDTO { Id = "00E", Hp = 6 },
+                new Mine.RockDTO { Id = "00F", Hp = 6 }
+                },
                 Veins = new() {
                     //new Mine.VeinDTO { Id = "010", Pos = "005", Type = (int)VeinType.Bauxite },
-                    new Mine.VeinDTO { Id = "020", Pos = "00B", Type = (int)MineralType.Coal }
+                    //new Mine.VeinDTO { Id = "020", Pos = "00B", Type = (int)MineralType.Coal }
                 }
             };
             dto.Lines.Add(line);
@@ -68,7 +73,7 @@ public class MineManager : MonoBehaviour, ISaveHandler
         {
             var line = new Mine.LineDTO {
                 Depth = 1,
-                IsTopLine = true,
+                IsTopLine = false,
                 Rocks = new() {
                 new Mine.RockDTO { Id = "101", Hp = 6 },
                 new Mine.RockDTO { Id = "102", Hp = 6 },
@@ -87,7 +92,7 @@ public class MineManager : MonoBehaviour, ISaveHandler
                 new Mine.RockDTO { Id = "10F", Hp = 6 }
                 },
                 Veins = new() {
-                    new Mine.VeinDTO { Id = "110", Pos = "10A", Type = (int)MineralType.Coal },
+                    //new Mine.VeinDTO { Id = "110", Pos = "10A", Type = (int)MineralType.Coal },
                     new Mine.VeinDTO { Id = "120", Pos = "102", Type = (int)MineralType.Coal }
                 }
             };
@@ -115,8 +120,36 @@ public class MineManager : MonoBehaviour, ISaveHandler
                 new Mine.RockDTO { Id = "20F", Hp = 6 }
                 },
                 Veins = new() {
-                    new Mine.VeinDTO { Id = "210", Pos = "20C", Type = (int)MineralType.Coal },
-                    new Mine.VeinDTO { Id = "220", Pos = "204", Type = (int)MineralType.Coal }
+                    //new Mine.VeinDTO { Id = "210", Pos = "20C", Type = (int)MineralType.Coal },
+                    //new Mine.VeinDTO { Id = "220", Pos = "204", Type = (int)MineralType.Coal }
+                }
+            };
+            dto.Lines.Add(line);
+        }
+        {
+            var line = new Mine.LineDTO {
+                Depth = 3,
+                IsTopLine = false,
+                Rocks = new() {
+                new Mine.RockDTO { Id = "301", Hp = 6 },
+                new Mine.RockDTO { Id = "302", Hp = 6 },
+                new Mine.RockDTO { Id = "303", Hp = 6 },
+                new Mine.RockDTO { Id = "304", Hp = 6 },
+                new Mine.RockDTO { Id = "305", Hp = 6 },
+                new Mine.RockDTO { Id = "306", Hp = 6 },
+                new Mine.RockDTO { Id = "307", Hp = 6 },
+                new Mine.RockDTO { Id = "308", Hp = 6 },
+                new Mine.RockDTO { Id = "309", Hp = 6 },
+                new Mine.RockDTO { Id = "30A", Hp = 6 },
+                new Mine.RockDTO { Id = "30B", Hp = 6 },
+                new Mine.RockDTO { Id = "30C", Hp = 6 },
+                new Mine.RockDTO { Id = "30D", Hp = 6 },
+                new Mine.RockDTO { Id = "30E", Hp = 6 },
+                new Mine.RockDTO { Id = "30F", Hp = 6 }
+                },
+                Veins = new() {
+                    //new Mine.VeinDTO { Id = "210", Pos = "20C", Type = (int)MineralType.Coal },
+                    //new Mine.VeinDTO { Id = "220", Pos = "204", Type = (int)MineralType.Coal }
                 }
             };
             dto.Lines.Add(line);
@@ -136,7 +169,13 @@ public class MineManager : MonoBehaviour, ISaveHandler
 
         ReBuildAll();
         _domain.BreakIfHpZero();
+
+        // Oxygen Timer
+        _oxygenTimer = gameObject.AddComponent<OxygenTimer>();
+        _oxygenTimer.OnOxygenDepleted += HandleOxygenDepleted;
+        _oxygenTimer.OnOxygenChanged += HandleOxygenChanged;
     }
+
     void Start()
     {
         Managers.Save.Register(this);
@@ -144,16 +183,31 @@ public class MineManager : MonoBehaviour, ISaveHandler
 
     void OnRockClicked(int rockId)
     {
+        if (_oxygenTimer.IsOxygenDepleted) {
+            Debug.Log("@MineManager - Oxygen Depleted - Cannot Click Rock");
+            return;
+        }
+
         Debug.Log($"Rock Clicked: {rockId}");
 
-        _domain.ClickRock(rockId, damage: 1);
+        _domain.ClickRock(rockId, damage: 10);
     }
 
     void OnVeinClick(int veinId)
     {
+        if (_oxygenTimer.IsOxygenDepleted) {
+            Debug.Log("@MineManager - Oxygen Depleted - Cannot Click Vein");
+            return;
+        }
+
         Debug.Log($"Vein Clicked: {veinId}");
 
         _domain.ClickVein(veinId, damage: 1);
+    }
+
+    public void StartMining()
+    {
+        _oxygenTimer.StartTimer(totalOxygen: 5f); //TODO: 테스트로 직접 시간 설정
     }
 
     #region EventHandlers
@@ -220,6 +274,17 @@ public class MineManager : MonoBehaviour, ISaveHandler
     {
         _lines[lineDepth].RemoveRock();
     }
+
+    // Oxygen Depleted Event Handler
+    private void HandleOxygenDepleted()
+    {
+        Debug.Log("Oxygen Depleted! Round Over.");
+    }
+
+    private void HandleOxygenChanged(float current)
+    {
+        Managers.Stat.Air = current;
+    }
     #endregion
 
     /// <summary>
@@ -230,7 +295,7 @@ public class MineManager : MonoBehaviour, ISaveHandler
         //NOTE: Canvas 강제 갱신
         Canvas.ForceUpdateCanvases();
         //NOTE: 기존 UI 제거
-        foreach (Transform child in lineContainer) {
+        foreach (Transform child in _lineContainer) {
             if (child.GetComponent<LineView>() != null)
                 Destroy(child.gameObject);
         }
@@ -246,28 +311,28 @@ public class MineManager : MonoBehaviour, ISaveHandler
     void AddLineView(LineState line)
     {
         var lineView = SpawnLineView(line);
-        lineView.transform.SetParent(lineContainer, false);
-        lineView.transform.SetSiblingIndex(lineAddPosition.GetSiblingIndex());
+        lineView.transform.SetParent(_lineContainer, false);
+        lineView.transform.SetSiblingIndex(_lineAddPosition.GetSiblingIndex());
         _lines[line.Depth] = lineView;
     }
 
     LineView SpawnLineView(LineState line)
     {
-        var lineView = Managers.Resource.Instantiate("UI/SubItem/LineView").GetOrAddComponent<LineView>();
+        var lineView = Managers.Resource.Instantiate("UI/Mine/LineView").GetOrAddComponent<LineView>();
         lineView.BuildFrom(line, SpawnRockView, SpawnVeinView);
         return lineView;
     }
 
     RockView SpawnRockView(RockState rock)
     {
-        var rockView = Managers.Resource.Instantiate("UI/SubItem/RockView").GetOrAddComponent<RockView>();
+        var rockView = Managers.Resource.Instantiate("UI/Mine/RockView").GetOrAddComponent<RockView>();
         rockView.Bind(rock, OnRockClicked);
         return rockView;
     }
 
     VeinView SpawnVeinView(VeinState vein)
     {
-        var veinView = Managers.Resource.Instantiate("UI/SubItem/VeinView").GetOrAddComponent<VeinView>();
+        var veinView = Managers.Resource.Instantiate("UI/Mine/VeinView").GetOrAddComponent<VeinView>();
         veinView.Bind(vein, OnVeinClick);
         return veinView;
     }
@@ -338,6 +403,11 @@ public class MineManager : MonoBehaviour, ISaveHandler
 
     public void TryAttackRockAt(int depth, int index, int damage)
     {
+        if (_oxygenTimer.IsOxygenDepleted) {
+            Debug.Log("@MineManager - WorkerRobot - Oxygen Depleted - Cannot Attack Rock");
+            return;
+        }
+
         var rock = TryGetRockAt(depth, index);
         if (rock != null) {
             _domain.ClickRock(rock.Id, damage);
@@ -346,6 +416,11 @@ public class MineManager : MonoBehaviour, ISaveHandler
 
     public void TryAttackRockByState(RockState rock, int damage)
     {
+        if (_oxygenTimer.IsOxygenDepleted) {
+            Debug.Log("@MineManager - WorkerRobot - Oxygen Depleted - Cannot Attack Rock");
+            return;
+        }
+
         if (rock != null) {
             _domain.ClickRock(rock.Id, damage);
         }
@@ -373,7 +448,7 @@ public class MineManager : MonoBehaviour, ISaveHandler
     #region Worker Robot
     public void SpawnWorker()
     {
-        var worker = Managers.Resource.Instantiate("Worker", lineContainer);
+        var worker = Managers.Resource.Instantiate("Worker", _lineContainer);
         worker.GetComponent<Worker>().Init(this);
     }
     #endregion
