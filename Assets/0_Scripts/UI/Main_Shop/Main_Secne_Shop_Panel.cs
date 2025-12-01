@@ -39,7 +39,12 @@ public class Main_Secne_Shop_Panel : MonoBehaviour
             Skill_Text.text = $"Level: {testLevel}";
 
             switch (id) {
-                case 101:
+                case 1:
+                    Managers.Stat.Base_Click_Damage = testLevel;
+                    break;
+
+
+				case 101:
                     MineManager.Instance.SpawnWorker();
                     break;
                 default:
