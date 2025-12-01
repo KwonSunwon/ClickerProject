@@ -10,6 +10,8 @@ public class StatManager
 	public float MaxAir=100;
 	public int Depth;
 
+	public int Base_Click_Damage;
+
 	//모든 광물 채굴 시 획득량 증가
 	public float Mine_Get_All = 0;
 	//모든 광물 채굴 시 두배 획득 확률
@@ -28,7 +30,7 @@ public class StatManager
 
 	
 	//기계 채굴 속도 증가
-	public float Machine_Speed_Inc= 0;
+	public float Machine_Speed_Inc = 0;
 	//기계 채굴량 증가
 	public float Machine_Get_Inc = 0;
 	
@@ -94,4 +96,15 @@ public class StatManager
 			if(Air<0) dir = !dir;
 		}
 	}
+
+	public int ClickPerDamage()
+	{
+		return Base_Click_Damage;
+	}
+	public int ClickPerGetMine()
+	{
+		return 0;
+	}
+
+
 }
