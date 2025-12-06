@@ -40,7 +40,7 @@ public class Main_Secne_Shop_Panel : MonoBehaviour
 
             switch (id) {
                 case 1:
-                    Managers.Stat.Base_Click_Damage = testLevel;
+                    Managers.Stat.ClickBaseDamage = testLevel;
                     break;
 
 
