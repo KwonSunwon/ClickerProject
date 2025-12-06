@@ -82,14 +82,15 @@ public class LineView : MonoBehaviour
         }
     }
 
-    public void AddVeinView(VeinView veinView)
-    {
-        if (_veins.ContainsKey(veinView.Id)) return;
-        veinView.transform.SetParent(_container, false);
-        _veins.Add(veinView.Id, veinView);
-    }
+	public void AddVeinView(VeinView veinView)
+	{
+		if (_veins.ContainsKey(veinView.Id)) return;
+		veinView.transform.SetParent(_container, false);
+		veinView.transform.SetAsFirstSibling();
+		_veins.Add(veinView.Id, veinView);
+	}
 
-    public void RemoveRock()
+	public void RemoveRock()
     {
         //var cnt = _rocks.Count;
         //for (int i = 1; i <= cnt; i++) {
