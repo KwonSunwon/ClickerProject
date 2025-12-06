@@ -207,7 +207,7 @@ public class MineManager : MonoBehaviour, ISaveHandler
 
     public void StartMining()
     {
-        _oxygenTimer.StartTimer(totalOxygen: 5f); //TODO: 테스트로 직접 시간 설정
+        _oxygenTimer.StartTimer(totalOxygen: 100f); //TODO: 테스트로 직접 시간 설정
     }
 
     #region EventHandlers
