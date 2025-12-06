@@ -1,6 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
+public static class Slices
+{
+    private const string PATH = "Art/Mining_Background";
+    private static Sprite _source;
+    private static readonly Dictionary<int, Sprite> _cache = new();
+
+    private const int SLICE_SIZE = 100;
+
+    static public Sprite GetSprite(int depth)
+    {
+        if (_cache.TryGetValue(depth, out var sprite)) {
+            return sprite;
+        }
+
+        _source = Resources.Load<Sprite>(PATH);
+
+        var tex = _source.texture;
+        var srcRect = _source.rect;
+
+        int sliceCount = _source.texture.height / SLICE_SIZE;
+        int sliceIndex = depth % sliceCount;
+
+        var yFromBottom = srcRect.y + (srcRect.height - SLICE_SIZE) - sliceIndex * SLICE_SIZE;
+
+        Rect cutRect = new(
+            0,
+            yFromBottom,
+            srcRect.width,
+            SLICE_SIZE
+        );
+
+        sprite = Sprite.Create(tex, cutRect, new Vector2(0.5f, 0.5f));
+        _cache.Add(depth, sprite);
+        return sprite;
+    }
+}
 
 public class LineView : MonoBehaviour
 {
@@ -12,10 +50,15 @@ public class LineView : MonoBehaviour
     private Dictionary<int, RockView> _rocks = null;
     private readonly Dictionary<int, VeinView> _veins = new();
 
+    private Image _image;
+
     public void Bind(int depth)
     {
         _depth = depth;
         _container = GetComponent<Transform>();
+
+        _image = GetComponent<Image>();
+        _image.sprite = Slices.GetSprite(depth);
     }
 
     public void BuildFrom(

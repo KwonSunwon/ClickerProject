@@ -18,6 +18,10 @@ public class RockView : MonoBehaviour, IPointerClickHandler
 
     Action<int> OnClick;
 
+    //TODO: 테스트 모니터링용
+    [SerializeField] private int _hp;
+    [SerializeField] private int _imageIndex = 5;
+
     public void Bind(RockState data, Action<int> onClick)
     {
         _img = GetComponent<Image>();
@@ -29,6 +33,9 @@ public class RockView : MonoBehaviour, IPointerClickHandler
         _id = data.Id;
         OnClick = onClick;
 
+        //TODO: 테스트 모니터링용
+        _hp = data.Hp;
+
         Refresh(data);
     }
 
@@ -38,22 +45,26 @@ public class RockView : MonoBehaviour, IPointerClickHandler
 
         //if (data.Hp < 6) _img.sprite = _spriteSet.sprites[data.Hp];
 
+        _hp = data.Hp;
+
         if (data.IsBroken) PlayBreak();
         else {
-            _img.sprite = _spriteSet.sprites[Math.Clamp((data.Hp * 6) / data.MaxHp - 1, 0, 5)];
+            _img.sprite = _spriteSet.sprites[Math.Clamp((data.Hp * 6) / data.MaxHp, 0, 5)];
+
+            _imageIndex = Math.Clamp((data.Hp * 6) / data.MaxHp, 0, 5);
         }
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log($"Rock {_id} Clicked");
+        //Debug.Log($"Rock {_id} Clicked");
 
         OnClick?.Invoke(_id);
     }
 
     public void PlayBreak()
     {
-        Debug.Log($"Rock {_id} Broken");
+        //Debug.Log($"Rock {_id} Broken");
 
         _img.enabled = false;
         _collider.enabled = false;
