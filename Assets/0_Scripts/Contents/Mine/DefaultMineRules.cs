@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using static Util;
 
 public class DefaultMineRules : IMineRules
@@ -36,6 +37,45 @@ public class DefaultMineRules : IMineRules
     public int RockHpForDepth(int depth)
     {
         //TODO: 밸런스 조정 필요
-        return Math.Max(6, (int)(depth * 0.5f));
+        //return Math.Max(6, (int)(depth * 0.5f));
+
+        var finalHp = (int)(100 * (1 + 0.015f * depth * depth));
+        return finalHp;
+    }
+
+    public int GetLineMaintainCount() => 4;
+}
+
+public class MiningEfficiency
+{
+    string Name;
+    string Category;
+    int MinDepth;
+    int MaxDepth;
+    float BasicMiner;
+    float ImprovedMiner;
+    float HighPerformanceMiner;
+    float PrecisionMiner;
+    float HighTechMiner;
+    float AlienMiner;
+
+    static private Dictionary<MineralType, MiningEfficiency> _efficiencies = null;
+
+    private const string PATH = "Data/MiningEfficiency";
+
+    public MiningEfficiency Get(MineralType type)
+    {
+        if (_efficiencies == null) {
+            List<MiningEfficiency> wrappingList = new();
+            var file = File.ReadAllText(PATH);
+            UnityEngine.JsonUtility.FromJsonOverwrite(file, wrappingList);
+
+            _efficiencies = new Dictionary<MineralType, MiningEfficiency>();
+            foreach (var efficiency in wrappingList) {
+                var mineralType = (MineralType)Enum.Parse(typeof(MineralType), efficiency.Name);
+                _efficiencies[mineralType] = efficiency;
+            }
+        }
+        return _efficiencies[type];
     }
 }
