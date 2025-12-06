@@ -1,0 +1,172 @@
+{
+    "MiningDepthInfo": [
+        {
+            "Name": "Coal",
+            "MinDepth": 0,
+            "MaxDepth": 50,
+            "FirstAppearStart": 0,
+            "FirstAppearEnd": 10
+        },
+        {
+            "Name": "CopperOre",
+            "MinDepth": 5,
+            "MaxDepth": 40,
+            "FirstAppearStart": 5,
+            "FirstAppearEnd": 15
+        },
+        {
+            "Name": "IronOre",
+            "MinDepth": 10,
+            "MaxDepth": 60,
+            "FirstAppearStart": 10,
+            "FirstAppearEnd": 20
+        },
+        {
+            "Name": "Salt",
+            "MinDepth": 15,
+            "MaxDepth": 70,
+            "FirstAppearStart": 15,
+            "FirstAppearEnd": 25
+        },
+        {
+            "Name": "Quartz",
+            "MinDepth": 25,
+            "MaxDepth": 80,
+            "FirstAppearStart": 25,
+            "FirstAppearEnd": 35
+        },
+        {
+            "Name": "Bauxite",
+            "MinDepth": 40,
+            "MaxDepth": 100,
+            "FirstAppearStart": 40,
+            "FirstAppearEnd": 50
+        },
+        {
+            "Name": "GoldNugget",
+            "MinDepth": 60,
+            "MaxDepth": 120,
+            "FirstAppearStart": 60,
+            "FirstAppearEnd": 70
+        },
+        {
+            "Name": "Lithium",
+            "MinDepth": 80,
+            "MaxDepth": 140,
+            "FirstAppearStart": 80,
+            "FirstAppearEnd": 90
+        },
+        {
+            "Name": "Ruby",
+            "MinDepth": 120,
+            "MaxDepth": 200,
+            "FirstAppearStart": 120,
+            "FirstAppearEnd": 135
+        },
+        {
+            "Name": "Emerald",
+            "MinDepth": 140,
+            "MaxDepth": 220,
+            "FirstAppearStart": 140,
+            "FirstAppearEnd": 155
+        },
+        {
+            "Name": "Sapphire",
+            "MinDepth": 160,
+            "MaxDepth": 240,
+            "FirstAppearStart": 160,
+            "FirstAppearEnd": 175
+        },
+        {
+            "Name": "Diamond",
+            "MinDepth": 180,
+            "MaxDepth": 270,
+            "FirstAppearStart": 180,
+            "FirstAppearEnd": 195
+        },
+        {
+            "Name": "Uranium",
+            "MinDepth": 180,
+            "MaxDepth": 280,
+            "FirstAppearStart": 180,
+            "FirstAppearEnd": 195
+        },
+        {
+            "Name": "XenonCrystal",
+            "MinDepth": 200,
+            "MaxDepth": 300,
+            "FirstAppearStart": 200,
+            "FirstAppearEnd": 215
+        },
+        {
+            "Name": "GammaStone",
+            "MinDepth": 230,
+            "MaxDepth": 310,
+            "FirstAppearStart": 230,
+            "FirstAppearEnd": 245
+        },
+        {
+            "Name": "QuantumFlux",
+            "MinDepth": 260,
+            "MaxDepth": 340,
+            "FirstAppearStart": 260,
+            "FirstAppearEnd": 275
+        },
+        {
+            "Name": "VoidCrystal",
+            "MinDepth": 290,
+            "MaxDepth": 370,
+            "FirstAppearStart": 290,
+            "FirstAppearEnd": 305
+        },
+        {
+            "Name": "DarkMatterShard",
+            "MinDepth": 320,
+            "MaxDepth": 400,
+            "FirstAppearStart": 320,
+            "FirstAppearEnd": 335
+        },
+        {
+            "Name": "CosmicOre",
+            "MinDepth": 330,
+            "MaxDepth": 410,
+            "FirstAppearStart": 330,
+            "FirstAppearEnd": 345
+        },
+        {
+            "Name": "StellarIron",
+            "MinDepth": 350,
+            "MaxDepth": 430,
+            "FirstAppearStart": 350,
+            "FirstAppearEnd": 365
+        },
+        {
+            "Name": "NebulaDust",
+            "MinDepth": 370,
+            "MaxDepth": 450,
+            "FirstAppearStart": 370,
+            "FirstAppearEnd": 385
+        },
+        {
+            "Name": "CosmicGlass",
+            "MinDepth": 390,
+            "MaxDepth": 470,
+            "FirstAppearStart": 390,
+            "FirstAppearEnd": 405
+        },
+        {
+            "Name": "NeutroniumOre",
+            "MinDepth": 450,
+            "MaxDepth": 490,
+            "FirstAppearStart": 450,
+            "FirstAppearEnd": 465
+        },
+        {
+            "Name": "AlienAlloy",
+            "MinDepth": 470,
+            "MaxDepth": 500,
+            "FirstAppearStart": 470,
+            "FirstAppearEnd": 485
+        }
+    ]
+}
