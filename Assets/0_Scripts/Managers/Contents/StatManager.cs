@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
@@ -84,18 +83,19 @@ public class StatManager
 
 	//Todo: 제거하기
 	bool dir = false;
-	public void test() {
-		if (dir)
-		{
-			Air += Time.fixedDeltaTime*30;
-			if (Air > MaxAir) dir = !dir;
-		}
-		else
-		{
-			Air-=Time.fixedDeltaTime*30;
-			if(Air<0) dir = !dir;
-		}
-	}
+    public void test()
+    {
+        //if (dir)
+        //{
+        //	Air += Time.fixedDeltaTime*30;
+        //	if (Air > MaxAir) dir = !dir;
+        //}
+        //else
+        //{
+        //	Air-=Time.fixedDeltaTime*30;
+        //	if(Air<0) dir = !dir;
+        //}
+    }
 
 	public int ClickPerDamage()
 	{
