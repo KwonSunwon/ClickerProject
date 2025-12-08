@@ -99,7 +99,7 @@ public sealed class MineDomain
     //TODO: damage 부분은 나중에 player 데이터를 직접 받아서 IMineRules 를 통해 계산하도록 변경
     public void ClickRock(int rockId, int damage)
     {
-        Debug.Log($"ClickRock {rockId} with damage {damage}");
+        //Debug.Log($"ClickRock {rockId} with damage {damage}");
 
         var (line, rock) = FindRock(rockId);
         if (!line.IsTopLine || rock == null || rock.IsBroken) return;
@@ -127,7 +127,7 @@ public sealed class MineDomain
     //TODO: damage 부분은 나중에 player 데이터를 직접 받아서 IMineRules 를 통해 계산하도록 변경
     public void ClickVein(int veinId, int damage)
     {
-        Debug.Log($"ClickVein {veinId}");
+        //Debug.Log($"ClickVein {veinId}");
 
         var (line, vein) = FindVein(veinId);
         if (vein == null) return;
@@ -135,7 +135,7 @@ public sealed class MineDomain
         //TODO: vein 클릭 시 종류에 따른 자원 획득, 효과 발동 등 로직 처리
         var type = vein.Type;
         //IDEA: IVeinHandler 같은 인터페이스를 만들어서 종류별로 처리?
-        Managers.Mineral.Add((MineralType)type, new(3));
+        Managers.Mineral.Add((MineralType)type, new(Managers.Stat.ClickPerGetMine()));
 
         OnVeinClicked?.Invoke(vein.Id, 1);
     }

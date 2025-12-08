@@ -98,7 +98,7 @@ public class Worker : MonoBehaviour
         if (_target.rock == null || _target.rock.IsBroken)
             return false;
 
-        _mm.TryAttackRockByState(_target.rock, 1);
+        _mm.TryAttackRockByState(_target.rock, Managers.Stat.workerDamage());
 
         //TODO: 애니메이션 및 이펙트 재생
         //GetComponent<RectTransform>().DOShakePosition(0.2f, new Vector2(5.0f, 5.0f), 10, 90.0f);
