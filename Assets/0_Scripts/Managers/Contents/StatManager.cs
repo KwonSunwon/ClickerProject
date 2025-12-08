@@ -9,31 +9,32 @@ public class StatManager
 	public float MaxAir=100;
 	public int Depth;
 
-	public int Base_Click_Damage;
+	public float ClickBaseDamage;
+	public float ClickDamageMultiplier;
+	public float OreGainMultiplier;
+	public float TimerDecayRate;
+	public float GoldGainMultiplier;
+	public float TimerMaxTime;
+	public float MinerWorkSpeed;
+	public float OxygenEfficiency;
+	public float MinerOreGain;
+	public float TimerAutoRecovery;
+	public float WorkerDamageMultiplier;
+	public float WorkerAttackSpeed;
+	public float WorkerCritChance;
+	public float WorkerCritDamage;
+	public float WorkerOverloadChance;
+	public float ClickCriticalChance;
+	public float AutoClickCount;
+	public float ClickAreaRange;
+	public float ClickCritDamage;
+	public float ClickOxygenRecovery;
+	public float ClickOreMiningChance;
+	public float ClickMegaHitChance;
+	public float ClickSuperCritChance;
 
-	//모든 광물 채굴 시 획득량 증가
-	public float Mine_Get_All = 0;
-	//모든 광물 채굴 시 두배 획득 확률
-	public float Mine_DoubleGet_All = 0;
-	//모든 광물 채굴 시 상위 광물 획득 확률
-	public float Mine_Upgrade_All = 0;
-	
-	
-	//클릭당 산소 소모량 감소율
-	public float Air_Efficiency_Click = 0;
-	//최대 산소량 증가
-	public float Air_Max_Inc = 0;
-	//클릭 시 산소 없이 채굴할 확률
-	public float Air_Free = 0;
 
 
-	
-	//기계 채굴 속도 증가
-	public float Machine_Speed_Inc = 0;
-	//기계 채굴량 증가
-	public float Machine_Get_Inc = 0;
-	
-	
 
 	public void CalcStat()
 	{
@@ -57,7 +58,29 @@ public class StatManager
 
 	public void InitStat()
 	{
-		Mine_Get_All = 0;
+		ClickBaseDamage=0;
+		ClickDamageMultiplier=0;
+		OreGainMultiplier= 0;
+		TimerDecayRate = 0;
+		GoldGainMultiplier = 0;
+		TimerMaxTime = 0;	
+		MinerWorkSpeed = 0;	
+		OxygenEfficiency = 0;
+		MinerOreGain = 0;
+		TimerAutoRecovery = 0;
+		WorkerDamageMultiplier = 0;
+		WorkerAttackSpeed = 0;
+		WorkerCritChance = 0;
+		WorkerCritDamage = 0;
+		WorkerOverloadChance = 0;
+		ClickCriticalChance = 0;
+		AutoClickCount = 0;
+		ClickAreaRange = 0;
+		ClickCritDamage = 0;
+		ClickOxygenRecovery = 0;
+		ClickOreMiningChance = 0;
+		ClickMegaHitChance = 0;
+		ClickSuperCritChance = 0;
 	}
 
 	public void AddStat(string statName, float statInc)
@@ -99,9 +122,51 @@ public class StatManager
 
 	public int ClickPerDamage()
 	{
-		return Base_Click_Damage;
+		float damage = ClickBaseDamage * ClickDamageMultiplier;
+
+		// 2. 크리티컬 판정*
+
+		if (Random.Range(0, 100) < ClickCriticalChance * 100)
+		{
+			damage *= ClickCritDamage;
+		}
+
+		// 3. 특수 공격 판정* 
+
+		if (ClickSuperCritChance > 0)
+		{
+			if (Random.Range(0, 100) < ClickSuperCritChance * 100)
+			{
+				damage *= 40; // 슈퍼 크리티컬 배율*
+
+			}
+		}
+		else if (ClickMegaHitChance > 0)
+		{
+			if (Random.Range(0, 100) < ClickMegaHitChance * 100)
+			{
+				damage *= 10; // 메가 히트 배율*
+
+			}
+		}
+
+		return (int)damage;
 	}
+
 	public int ClickPerGetMine()
+	{
+		float ret = (3 * OreGainMultiplier);
+		
+		return (int)ret;
+
+	}
+
+	public float WorkerSpeed( float baseTimer)
+	{
+		return baseTimer / (1 + WorkerAttackSpeed);
+	}
+
+	public int workerDamage( float baseDamage)
 	{
 		return 0;
 	}
