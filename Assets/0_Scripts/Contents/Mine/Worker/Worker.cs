@@ -31,6 +31,14 @@ public class Worker : MonoBehaviour
 
     private float _digTimer = 0.0f;
 
+    //TODO: Worker의 수 추가가 아닌 단계 업그레이드 방식으로 변경함으로 레벨 추가
+    // 단계 업그레이드 적용 작업 필요
+    [SerializeField] private int _level = 1;
+    public int Level {
+        get => _level;
+        set => _level = value;
+    }
+
     //TODO: Save/Load 함수 제작
 
     public void Init(MineManager mm)
