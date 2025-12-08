@@ -190,7 +190,7 @@ public class MineManager : MonoBehaviour, ISaveHandler
 
         Debug.Log($"Rock Clicked: {rockId}");
 
-        _domain.ClickRock(rockId, damage: 10);
+        _domain.ClickRock(rockId, Managers.Stat.ClickPerDamage());
     }
 
     void OnVeinClick(int veinId)
@@ -202,12 +202,12 @@ public class MineManager : MonoBehaviour, ISaveHandler
 
         Debug.Log($"Vein Clicked: {veinId}");
 
-        _domain.ClickVein(veinId, damage: 1);
+        _domain.ClickVein(veinId, Managers.Stat.ClickPerDamage());
     }
 
     public void StartMining()
     {
-        _oxygenTimer.StartTimer(totalOxygen: 100f); //TODO: 테스트로 직접 시간 설정
+        _oxygenTimer.StartTimer(Managers.Stat.MaxAir);
     }
 
     #region EventHandlers
@@ -336,7 +336,7 @@ public class MineManager : MonoBehaviour, ISaveHandler
         veinView.Bind(vein, OnVeinClick);
         return veinView;
     }
-    #endregion
+    #endregion View Spawning
 
     #region Save/Load
     public bool OnSaveRequest(GlobalDTO dto)
