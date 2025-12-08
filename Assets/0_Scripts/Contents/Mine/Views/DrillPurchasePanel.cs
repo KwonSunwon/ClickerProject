@@ -4,11 +4,12 @@ using UnityEngine.EventSystems;
 public class DrillPurchasePanel : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] GameObject[] HideObjects;
+	[SerializeField] VeinDrill veinDrill;
 
 
 	public void OnPointerClick(PointerEventData eventData)
 	{
-		Debug.Log("Click");
+		veinDrill.ActiveDrill();
 		foreach (GameObject go in HideObjects)
 		{
 			go.SetActive(false);
