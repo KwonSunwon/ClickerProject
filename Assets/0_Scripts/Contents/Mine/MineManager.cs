@@ -446,10 +446,15 @@ public class MineManager : MonoBehaviour, ISaveHandler
     #endregion
 
     #region Worker Robot
+    //TODO: Worker가 한 대만 소환되도록 수정
+    private bool _workerSpawned = false;
+
     public void SpawnWorker()
     {
+        if (_workerSpawned) return;
         var worker = Managers.Resource.Instantiate("Worker", _lineContainer);
         worker.GetComponent<Worker>().Init(this);
+        _workerSpawned = true;
     }
     #endregion
 }
