@@ -159,7 +159,7 @@ public class StatManager
         return baseTimer / (1 + WorkerAttackSpeed);
     }
 
-    public int WorkerDamage(float baseDamage)
+    public int WorkerDamage()
     {
         return 0;
     }
