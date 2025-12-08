@@ -71,7 +71,7 @@ public class Worker : MonoBehaviour
         _digTimer -= Time.deltaTime;
         if (_digTimer < 0.0f) {
             if (TryDigTarget()) {
-                _digTimer = _digInterval;
+                _digTimer = Managers.Stat.WorkerSpeed(_digInterval);
             }
             else {
                 _target.rock = null;
@@ -98,7 +98,7 @@ public class Worker : MonoBehaviour
         if (_target.rock == null || _target.rock.IsBroken)
             return false;
 
-        _mm.TryAttackRockByState(_target.rock, Managers.Stat.workerDamage());
+        _mm.TryAttackRockByState(_target.rock, Managers.Stat.WorkerDamage());
 
         //TODO: 애니메이션 및 이펙트 재생
         //GetComponent<RectTransform>().DOShakePosition(0.2f, new Vector2(5.0f, 5.0f), 10, 90.0f);
@@ -125,6 +125,7 @@ public class Worker : MonoBehaviour
         //FIXME: 맨 처음에 받는 타겟의 y 좌표가 항상 0으로 설정되는 문제가 있음
         // 예상되는 원인으로는 해당 깊이의 LineView의 위치가 제대로 초기화되지 않아서 생기는 문제로 추측 중
         // 상점에서 Worker 를 구매하는 방식으로 하는 경우에도 문제가 생기는지 확인 필요
+        // --문제 해결 하지만 계속 추적 필요
 
         var rockView = _mm.TryGetRockViewAt(_target.depth, _target.index);
         var lineView = _mm.TryGetLineView(_target.depth);
