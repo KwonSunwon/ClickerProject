@@ -22,15 +22,10 @@ public class Worker : MonoBehaviour
     }
 
     private Target _target;
-    private Target _prevTarget;
 
     private bool _isMoving = false;
 
     private int _direction = 1;   // 1: 오른쪽, -1: 왼쪽
-    private short _directionVert = 1; // 1: 수평, 0: 아래로 이동 중
-
-    private bool _isMoveWithOutTarget = false;
-    private bool _isDigging = false;
 
     [SerializeField] private float _moveSpeed = 100.0f;
     [SerializeField] private float _digInterval = 10.0f;
@@ -62,7 +57,7 @@ public class Worker : MonoBehaviour
 
         _target.depth = -1;
         _target.index = 4;
-        _digTimer = _digInterval;
+        _digTimer = Managers.Stat.WorkerSpeed(_digInterval);
 
         GetComponent<RectTransform>().anchoredPosition = new Vector2(460.0f, -550.0f);
 
@@ -72,29 +67,14 @@ public class Worker : MonoBehaviour
 
     private void Update()
     {
-        //if (_target.rock == null || _target.rock.IsBroken && !_isMoveWithOutTarget) {
-        //    UpdateTarget();
-        //    MoveToTarget();
-        //    return;
-        //}
-
-        //if (_isMoving) {
-        //    return;
-        //}
-
-        //_digTimer -= Time.deltaTime;
-        //if (_digTimer < 0.0f) {
-        //    if (TryDigTarget()) {
-        //        _digTimer = _digInterval;
-        //    }
-        //    else {
-        //        _target.rock = null;
-        //        _digTimer = _digInterval;
-        //    }
-        //}
-
         if (_isMoving) {
             return;
+        }
+
+        _digTimer -= Time.deltaTime;
+        if (_current == State.DigSide || _current == State.DigDown) {
+            if (_digTimer > 0.0f)
+                return;
         }
 
         switch (_current) {
@@ -116,94 +96,6 @@ public class Worker : MonoBehaviour
             case State.DigDown:
                 DigDown();
                 break;
-        }
-    }
-
-    private void MoveToTarget()
-    {
-        var rt = (RectTransform)transform;
-
-        _isMoving = true;
-
-        UpdateTargetPosition();
-
-        GetComponent<RectTransform>().DOAnchorPos(_target.position, _moveSpeed)
-            .SetSpeedBased(true)
-            .SetEase(Ease.Linear)
-            .OnComplete(() => {
-                _isMoving = false;
-                _isMoveWithOutTarget = false;
-                _directionVert = 1;
-            });
-    }
-
-    private bool TryDigTarget()
-    {
-        if (_target.rock == null || _target.rock.IsBroken)
-            return false;
-
-        _mm.TryAttackRockByState(_target.rock, Managers.Stat.WorkerDamage());
-
-        //TODO: 애니메이션 및 이펙트 재생
-        //GetComponent<RectTransform>().DOShakePosition(0.2f, new Vector2(5.0f, 5.0f), 10, 90.0f);
-
-        return true;
-    }
-
-    private void UpdateTarget()
-    {
-        //NOTE: 이동 및 타겟 갱신 로직
-        // 1. 현재 타겟이 없는 경우(파괴되거나 소환 직후) 아래 라인이 클리어인지 확인
-        //  a. 클리어된 경우 바로 아래로 이동 -> 1
-        //  b. 그러지 않은 경우 현재 방향에 따라 가장자리로 이동
-        // 2. 바로 아래 Rock이 존재하는지 확인하고 타겟으로 지정
-        // 3. 타겟을 공격하고 아래로 이동/바로 이동
-        // 4. 방향을 전환하고 현재라인에서 좌/우로 이동하면서 채굴 수행
-        // 5. 가장자리에 도달한 경우 1번부터 다시 수행
-
-        if (_mm.IsLineCleared(_target.depth)) {
-            //NOTE: 현재 라인을 다 클리어했고, 바로 아래 Rock이 존재하는 경우
-            if (_mm.TryGetRockAt(_target.depth + 1, _target.index, out _target.rock)) {
-                ++_target.depth;
-
-            }
-            //NOTE: 바로 아래 Rock이 존재하지 않는 경우
-            else {
-                ++_target.depth;
-                _directionVert = 0;
-                _isMoveWithOutTarget = true;
-                return;
-            }
-        }
-
-        _prevTarget = _target;
-        do {
-            _target.index += 1 * _direction;
-            if (_target.index > MAX_INDEX || _target.index < 0) {
-                _target.depth++;
-                _direction = -_direction; // 방향 전환
-                continue;
-            }
-            _mm.TryGetRockAt(_target.depth, _target.index, out _target.rock);
-        } while (_target.rock == null || _target.rock.IsBroken);
-    }
-
-    private void UpdateTargetPosition()
-    {
-        //FIXME: 맨 처음에 받는 타겟의 y 좌표가 항상 0으로 설정되는 문제가 있음
-        // 예상되는 원인으로는 해당 깊이의 LineView의 위치가 제대로 초기화되지 않아서 생기는 문제로 추측 중
-        // 상점에서 Worker 를 구매하는 방식으로 하는 경우에도 문제가 생기는지 확인 필요
-        // --문제 해결 하지만 계속 추적 필요
-
-        VeinView.Marker ??= new(GameObject.FindGameObjectsWithTag("VeinPositionMarker"));
-
-        //var rockView = _mm.TryGetRockViewAt(_target.depth, _target.index);
-        var lineView = _mm.TryGetLineView(_target.depth);
-
-        if (lineView != null) {
-            //_target.position.x = rockView.GetComponent<RectTransform>().anchoredPosition.x + (100 * _direction);
-            _target.position.x = VeinView.Marker.GetPosition(_target.index).x - (100 * _direction) * _directionVert;
-            _target.position.y = lineView.GetComponent<RectTransform>().anchoredPosition.y;
         }
     }
 
@@ -246,9 +138,8 @@ public class Worker : MonoBehaviour
 
     private void FindDown()
     {
-        //_target.index -= 1 * _direction;
-
         if (_mm.TryGetRockAt(_target.depth + 1, _target.index, out _target.rock)) {
+            _digTimer = Managers.Stat.WorkerSpeed(_digInterval);
             _current = State.DigDown;
             return;
         }
@@ -270,6 +161,7 @@ public class Worker : MonoBehaviour
             .OnComplete(() => {
                 _isMoving = false;
                 _current = State.DigSide;
+                _digTimer = Managers.Stat.WorkerSpeed(_digInterval);
             });
     }
 
@@ -287,24 +179,30 @@ public class Worker : MonoBehaviour
             .OnComplete(() => {
                 _isMoving = false;
                 _current = State.FindSide;
+                _digTimer = Managers.Stat.WorkerSpeed(_digInterval);
             });
     }
 
     private void DigSide()
     {
-        if (_mm.TryAttackRockByState(_target.rock, Managers.Stat.WorkerDamage())) {
-            return;
+        _mm.TryAttackRockByState(_target.rock, Managers.Stat.WorkerDamage());
+
+        if (_target.rock == null || _target.rock.IsBroken) {
+            _target.index -= 1 * _direction;
+            _current = State.FindSide;
         }
-        _target.index -= 1 * _direction;
-        _current = State.FindSide;
+        else
+            _digTimer = Managers.Stat.WorkerSpeed(_digInterval);
     }
 
     private void DigDown()
     {
-        if (_mm.TryAttackRockByState(_target.rock, Managers.Stat.WorkerDamage())) {
-            return;
-        }
-        _current = State.MoveDown;
+        _mm.TryAttackRockByState(_target.rock, Managers.Stat.WorkerDamage());
+
+        if (_target.rock == null || _target.rock.IsBroken)
+            _current = State.MoveDown;
+        else
+            _digTimer = Managers.Stat.WorkerSpeed(_digInterval);
     }
 
     #endregion State Functions
