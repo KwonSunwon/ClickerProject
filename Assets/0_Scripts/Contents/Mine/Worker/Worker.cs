@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Worker : MonoBehaviour
@@ -24,12 +25,17 @@ public class Worker : MonoBehaviour
     private Target _prevTarget;
 
     private bool _isMoving = false;
-    private short _direction = 1;   // 1: 오른쪽, -1: 왼쪽
+
+    private int _direction = 1;   // 1: 오른쪽, -1: 왼쪽
+    private short _directionVert = 1; // 1: 수평, 0: 아래로 이동 중
+
+    private bool _isMoveWithOutTarget = false;
+    private bool _isDigging = false;
 
     [SerializeField] private float _moveSpeed = 100.0f;
-    [SerializeField] private float _digInterval = 0.1f;
+    [SerializeField] private float _digInterval = 10.0f;
 
-    private float _digTimer = 0.0f;
+    private float _digTimer;
 
     //TODO: Worker의 수 추가가 아닌 단계 업그레이드 방식으로 변경함으로 레벨 추가
     // 단계 업그레이드 적용 작업 필요
@@ -39,56 +45,84 @@ public class Worker : MonoBehaviour
         set => _level = value;
     }
 
+    private RectTransform _rt;
+
     //TODO: Save/Load 함수 제작
 
     public void Init(MineManager mm)
     {
         _mm ??= mm;
+        _rt ??= GetComponent<RectTransform>();
     }
 
     private void Start()
     {
         _mm ??= _mineManager.GetComponent<MineManager>();
+        _rt ??= GetComponent<RectTransform>();
 
-        _target.depth = 0;
-        _target.index = 0;
+        _target.depth = -1;
+        _target.index = 4;
+        _digTimer = _digInterval;
 
-        GetComponent<RectTransform>().anchoredPosition = new Vector2(460.0f, -545.0f);
+        GetComponent<RectTransform>().anchoredPosition = new Vector2(460.0f, -550.0f);
 
-        //TODO: 임시 초기 타겟 설정, 추후 이 절차 없이 제대로된 타켓을 찾도록 수정 필요
-        //_target = new Target() {
-        //    depth = 0,
-        //    index = 0,
-        //    rock = _mm.TryGetRockAt(1, 14),
-        //    position = new Vector2(1484.8f, -750.0f)
-        //};
+        _target.position.y = -550.0f;
+        _target.position.x = 460.0f;
     }
 
     private void Update()
     {
-        if (_target.rock == null || _target.rock.IsBroken) {
-            UpdateTarget();
-            MoveToTarget();
-            return;
-        }
+        //if (_target.rock == null || _target.rock.IsBroken && !_isMoveWithOutTarget) {
+        //    UpdateTarget();
+        //    MoveToTarget();
+        //    return;
+        //}
+
+        //if (_isMoving) {
+        //    return;
+        //}
+
+        //_digTimer -= Time.deltaTime;
+        //if (_digTimer < 0.0f) {
+        //    if (TryDigTarget()) {
+        //        _digTimer = _digInterval;
+        //    }
+        //    else {
+        //        _target.rock = null;
+        //        _digTimer = _digInterval;
+        //    }
+        //}
 
         if (_isMoving) {
             return;
         }
 
-        _digTimer -= Time.deltaTime;
-        if (_digTimer < 0.0f) {
-            if (TryDigTarget()) {
-                _digTimer = Managers.Stat.WorkerSpeed(_digInterval);
-            }
-            else {
-                _target.rock = null;
-            }
+        switch (_current) {
+            case State.FindSide:
+                FindSide();
+                break;
+            case State.FindDown:
+                FindDown();
+                break;
+            case State.MoveSide:
+                MoveSide();
+                break;
+            case State.MoveDown:
+                MoveDown();
+                break;
+            case State.DigSide:
+                DigSide();
+                break;
+            case State.DigDown:
+                DigDown();
+                break;
         }
     }
 
     private void MoveToTarget()
     {
+        var rt = (RectTransform)transform;
+
         _isMoving = true;
 
         UpdateTargetPosition();
@@ -98,6 +132,8 @@ public class Worker : MonoBehaviour
             .SetEase(Ease.Linear)
             .OnComplete(() => {
                 _isMoving = false;
+                _isMoveWithOutTarget = false;
+                _directionVert = 1;
             });
     }
 
@@ -116,15 +152,39 @@ public class Worker : MonoBehaviour
 
     private void UpdateTarget()
     {
+        //NOTE: 이동 및 타겟 갱신 로직
+        // 1. 현재 타겟이 없는 경우(파괴되거나 소환 직후) 아래 라인이 클리어인지 확인
+        //  a. 클리어된 경우 바로 아래로 이동 -> 1
+        //  b. 그러지 않은 경우 현재 방향에 따라 가장자리로 이동
+        // 2. 바로 아래 Rock이 존재하는지 확인하고 타겟으로 지정
+        // 3. 타겟을 공격하고 아래로 이동/바로 이동
+        // 4. 방향을 전환하고 현재라인에서 좌/우로 이동하면서 채굴 수행
+        // 5. 가장자리에 도달한 경우 1번부터 다시 수행
+
+        if (_mm.IsLineCleared(_target.depth)) {
+            //NOTE: 현재 라인을 다 클리어했고, 바로 아래 Rock이 존재하는 경우
+            if (_mm.TryGetRockAt(_target.depth + 1, _target.index, out _target.rock)) {
+                ++_target.depth;
+
+            }
+            //NOTE: 바로 아래 Rock이 존재하지 않는 경우
+            else {
+                ++_target.depth;
+                _directionVert = 0;
+                _isMoveWithOutTarget = true;
+                return;
+            }
+        }
+
         _prevTarget = _target;
         do {
             _target.index += 1 * _direction;
             if (_target.index > MAX_INDEX || _target.index < 0) {
                 _target.depth++;
-                _direction = (short)(-_direction); // 방향 전환
+                _direction = -_direction; // 방향 전환
                 continue;
             }
-            _target.rock = _mm.TryGetRockAt(_target.depth, _target.index);
+            _mm.TryGetRockAt(_target.depth, _target.index, out _target.rock);
         } while (_target.rock == null || _target.rock.IsBroken);
     }
 
@@ -135,12 +195,117 @@ public class Worker : MonoBehaviour
         // 상점에서 Worker 를 구매하는 방식으로 하는 경우에도 문제가 생기는지 확인 필요
         // --문제 해결 하지만 계속 추적 필요
 
-        var rockView = _mm.TryGetRockViewAt(_target.depth, _target.index);
+        VeinView.Marker ??= new(GameObject.FindGameObjectsWithTag("VeinPositionMarker"));
+
+        //var rockView = _mm.TryGetRockViewAt(_target.depth, _target.index);
         var lineView = _mm.TryGetLineView(_target.depth);
 
-        if (rockView != null && lineView != null) {
-            _target.position.x = rockView.GetComponent<RectTransform>().anchoredPosition.x;
+        if (lineView != null) {
+            //_target.position.x = rockView.GetComponent<RectTransform>().anchoredPosition.x + (100 * _direction);
+            _target.position.x = VeinView.Marker.GetPosition(_target.index).x - (100 * _direction) * _directionVert;
             _target.position.y = lineView.GetComponent<RectTransform>().anchoredPosition.y;
         }
     }
+
+    #region State Functions
+    private enum State
+    {
+        FindSide,
+        FindDown,
+        MoveSide,
+        MoveDown,
+        DigSide,
+        DigDown
+    }
+
+    private State _current = State.FindSide;
+
+    private void FindSide()
+    {
+        if (_mm.IsLineCleared(_target.depth)) {
+            _current = State.FindDown;
+            return;
+        }
+
+        HashSet<int> visited = new();
+        while (visited.Count <= MAX_INDEX) {
+            if (_mm.TryGetRockAt(_target.depth, _target.index, out _target.rock)) {
+                _current = State.MoveSide;
+                return;
+            }
+            visited.Add(_target.index);
+            _target.index += 1 * _direction;
+            if (_target.index > MAX_INDEX || _target.index < 0) {
+                _direction = -_direction;
+                _target.index += 1 * _direction;
+            }
+        }
+
+        _current = State.FindDown;
+    }
+
+    private void FindDown()
+    {
+        //_target.index -= 1 * _direction;
+
+        if (_mm.TryGetRockAt(_target.depth + 1, _target.index, out _target.rock)) {
+            _current = State.DigDown;
+            return;
+        }
+
+        _current = State.MoveDown;
+    }
+
+    private void MoveSide()
+    {
+        VeinView.Marker ??= new(GameObject.FindGameObjectsWithTag("VeinPositionMarker"));
+
+        _target.position.x = VeinView.Marker.GetPosition(_target.index).x - (100 * _direction);
+
+        _isMoving = true;
+
+        _rt.DOAnchorPos(_target.position, _moveSpeed)
+            .SetSpeedBased(true)
+            .SetEase(Ease.Linear)
+            .OnComplete(() => {
+                _isMoving = false;
+                _current = State.DigSide;
+            });
+    }
+
+    private void MoveDown()
+    {
+        _target.depth++;
+
+        _target.position.y -= 100.0f;
+
+        _isMoving = true;
+
+        _rt.DOAnchorPos(_target.position, _moveSpeed)
+            .SetSpeedBased(true)
+            .SetEase(Ease.Linear)
+            .OnComplete(() => {
+                _isMoving = false;
+                _current = State.FindSide;
+            });
+    }
+
+    private void DigSide()
+    {
+        if (_mm.TryAttackRockByState(_target.rock, Managers.Stat.WorkerDamage())) {
+            return;
+        }
+        _target.index -= 1 * _direction;
+        _current = State.FindSide;
+    }
+
+    private void DigDown()
+    {
+        if (_mm.TryAttackRockByState(_target.rock, Managers.Stat.WorkerDamage())) {
+            return;
+        }
+        _current = State.MoveDown;
+    }
+
+    #endregion State Functions
 }

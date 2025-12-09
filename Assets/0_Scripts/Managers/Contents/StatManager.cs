@@ -143,7 +143,7 @@ public class StatManager
             }
         }
 
-        return (int)damage;
+        return 10;
     }
 
     public int ClickPerGetMine()
@@ -161,6 +161,6 @@ public class StatManager
 
     public int WorkerDamage()
     {
-        return 0;
+        return 10;
     }
 }
