@@ -127,4 +127,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mineManager: {fileID: 0}
   _moveSpeed: 100
-  _digInterval: 0.1
+  _digInterval: 10
+  _level: 1

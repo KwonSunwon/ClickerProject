@@ -140,9 +140,9 @@ public sealed class MineDomain
         OnVeinClicked?.Invoke(vein.Id, 1);
     }
 
-    private bool IsCleared(LineState line)
+    public bool IsCleared(LineState line)
     {
-        return line.Rocks.TrueForAll(r => r.IsBroken) || line.Rocks == null;
+        return line.Rocks == null || line.Rocks.TrueForAll(r => r.IsBroken);
     }
 
     private void ClearRock(LineState line)

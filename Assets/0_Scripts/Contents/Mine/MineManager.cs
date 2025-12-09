@@ -395,10 +395,11 @@ public class MineManager : MonoBehaviour, ISaveHandler
     /// <summary>
     /// 깊이와 인덱스(0~14)로 해당 위치에 RockState를 찾음
     /// </summary>
-    public RockState TryGetRockAt(int depth, int index)
+    public bool TryGetRockAt(int depth, int index, out RockState rock)
     {
-        return _state.Lines.Find(l => l.Depth == depth)?
+        rock = _state.Lines.Find(l => l.Depth == depth)?
             .Rocks?.Find(r => r.Id == Util.MakeRockId(depth, index));
+        return rock != null && !rock.IsBroken;
     }
 
     public void TryAttackRockAt(int depth, int index, int damage)
@@ -408,22 +409,24 @@ public class MineManager : MonoBehaviour, ISaveHandler
             return;
         }
 
-        var rock = TryGetRockAt(depth, index);
-        if (rock != null) {
+        if (TryGetRockAt(depth, index, out var rock)) {
             _domain.ClickRock(rock.Id, damage);
         }
     }
 
-    public void TryAttackRockByState(RockState rock, int damage)
+    public bool TryAttackRockByState(RockState rock, int damage)
     {
+        //TODO: 산소가 부족해지는 것을 Worker 쪽에서 처리하도록 변경
         if (_oxygenTimer.IsOxygenDepleted) {
             Debug.Log("@MineManager - WorkerRobot - Oxygen Depleted - Cannot Attack Rock");
-            return;
+            return false;
         }
 
-        if (rock != null) {
+        if (rock != null && !rock.IsBroken) {
             _domain.ClickRock(rock.Id, damage);
+            return true;
         }
+        return false;
     }
 
     public RockView TryGetRockViewAt(int depth, int index)
@@ -442,6 +445,13 @@ public class MineManager : MonoBehaviour, ISaveHandler
             return lineView;
         }
         return null;
+    }
+
+    public bool IsLineCleared(int depth)
+    {
+        var line = _state.Lines.Find(l => l.Depth == depth);
+        if (line == null) return true;
+        return _domain.IsCleared(line);
     }
     #endregion
 
