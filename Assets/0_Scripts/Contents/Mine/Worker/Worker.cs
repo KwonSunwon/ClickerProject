@@ -67,6 +67,19 @@ public class Worker : MonoBehaviour
 
     private void Update()
     {
+        //TODO: 이동/채굴 도중 Rock이 파괴되는 경우
+        // 1. 이동을 멈추고 다시 FindSide 상태로 돌아가도록 수정
+        // 2. DigSide/Down 상태에서 Rock이 파괴되는 경우 바로 다음 상태로 넘어가도록 수정
+        // 3. Rock 상태 확인을 Update에서 해당하는 경우에 수행
+        //   - MoveSide
+        //     -> 해당 위치에서 정지하고 FindSide 수행
+        //     -> 이때 해당 라인이 빈 경우 바로 아래 Idx의 Rock 확인해야하지만,
+        //     -> 현재 구조로 하면 MoveSide 시 목표로 했던 Idx를 기준으로 확인을 함
+        //     -> 즉, Idx를 현재 위치에 해당하는 또는 비슷한 Idx로 변경해야 함
+        //   - DigSide
+        //   - DigDown
+        //     -> 파괴된 경우에는 다음 타이머까지 기다리지 않고 바로 다음 상태로 넘어가도록 하면 됨
+
         if (_isMoving) {
             return;
         }
