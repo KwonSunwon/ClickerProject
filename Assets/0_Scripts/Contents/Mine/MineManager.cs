@@ -207,7 +207,8 @@ public class MineManager : MonoBehaviour, ISaveHandler
 
     public void StartMining()
     {
-        _oxygenTimer.StartTimer(Managers.Stat.MaxAir);
+        //_oxygenTimer.StartTimer(Managers.Stat.MaxAir);
+        _oxygenTimer.StartTimer(3);
     }
 
     #region EventHandlers
@@ -276,9 +277,18 @@ public class MineManager : MonoBehaviour, ISaveHandler
     }
 
     // Oxygen Depleted Event Handler
+    private GameObject _settlement;
     private void HandleOxygenDepleted()
     {
         Debug.Log("Oxygen Depleted! Round Over.");
+
+        if (_settlement == null) {
+            var prefab = Resources.Load<GameObject>("Prefabs/UI/Settlement");
+            var parent = GameObject.FindWithTag("ButtonCanvas").transform;
+            _settlement ??= Instantiate(prefab, parent);
+        }
+
+        _settlement.SetActive(true);
     }
 
     private void HandleOxygenChanged(float current)
