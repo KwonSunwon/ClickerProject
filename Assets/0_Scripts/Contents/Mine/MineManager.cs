@@ -64,8 +64,12 @@ public class MineManager : MonoBehaviour, ISaveHandler
                 new Mine.RockDTO { Id = "00F", Hp = 6 }
                 },
                 Veins = new() {
-                    //new Mine.VeinDTO { Id = "010", Pos = "005", Type = (int)VeinType.Bauxite },
-                    //new Mine.VeinDTO { Id = "020", Pos = "00B", Type = (int)MineralType.Coal }
+                    new Mine.VeinDTO { Id = "010", Pos = "007", Type = (int)MineralType.Bauxite },
+                    new Mine.VeinDTO { Id = "020", Pos = "009", Type = (int)MineralType.Coal },
+                    new Mine.VeinDTO { Id = "030", Pos = "00B", Type = (int)MineralType.CopperOre },
+                    new Mine.VeinDTO { Id = "040", Pos = "001", Type = (int)MineralType.Emerald },
+                    new Mine.VeinDTO { Id = "050", Pos = "003", Type = (int)MineralType.IronOre },
+                    new Mine.VeinDTO { Id = "060", Pos = "005", Type = (int)MineralType.Salt }
                 }
             };
             dto.Lines.Add(line);
@@ -208,7 +212,7 @@ public class MineManager : MonoBehaviour, ISaveHandler
     public void StartMining()
     {
         //_oxygenTimer.StartTimer(Managers.Stat.MaxAir);
-        _oxygenTimer.StartTimer(3);
+        _oxygenTimer.StartTimer(10);
     }
 
     #region EventHandlers
@@ -283,7 +287,7 @@ public class MineManager : MonoBehaviour, ISaveHandler
         Debug.Log("Oxygen Depleted! Round Over.");
 
         if (_settlement == null) {
-            var prefab = Resources.Load<GameObject>("Prefabs/UI/Settlement");
+            var prefab = Resources.Load<GameObject>("Prefabs/UI/MineResult/MineResult");
             var parent = GameObject.FindWithTag("ButtonCanvas").transform;
             _settlement ??= Instantiate(prefab, parent);
         }
@@ -463,7 +467,12 @@ public class MineManager : MonoBehaviour, ISaveHandler
         if (line == null) return true;
         return _domain.IsCleared(line);
     }
-    #endregion
+
+    public Dictionary<MineralType, int> ConsumeMineralBuffer()
+    {
+        return _domain.ConsumeTempMineralBuffer();
+    }
+    #endregion Utility
 
     #region Worker Robot
     //TODO: Worker가 한 대만 소환되도록 수정
