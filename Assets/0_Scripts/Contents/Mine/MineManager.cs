@@ -171,9 +171,6 @@ public class MineManager : MonoBehaviour, ISaveHandler
         _domain.OnVeinClicked += HandleVeinDamaged;
         _domain.OnLineClear += HandleLineClear;
 
-        ReBuildAll();
-        _domain.BreakIfHpZero();
-
         // Oxygen Timer
         _oxygenTimer = gameObject.AddComponent<OxygenTimer>();
         _oxygenTimer.OnOxygenDepleted += HandleOxygenDepleted;
@@ -182,6 +179,9 @@ public class MineManager : MonoBehaviour, ISaveHandler
 
     void Start()
     {
+        ReBuildAll();
+        _domain.BreakIfHpZero();
+
         Managers.Save.Register(this);
     }
 
