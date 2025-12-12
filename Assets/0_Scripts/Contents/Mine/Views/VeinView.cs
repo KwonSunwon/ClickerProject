@@ -36,7 +36,7 @@ public static class VeinSpriteCatalog
 
 public class VeinView : MonoBehaviour, IPointerClickHandler
 {
-    private record PositionMarker
+    public record PositionMarker
     {
         public Vector2[] Positions;
         public Vector2[] Sizes;
@@ -67,7 +67,7 @@ public class VeinView : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    private static PositionMarker Marker = null;
+    public static PositionMarker Marker = null;
 
     public int Id { get; private set; }
     public int Pos { get; private set; }
