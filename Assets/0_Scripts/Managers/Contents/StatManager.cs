@@ -150,8 +150,8 @@ public class StatManager
     {
         float ret = (3 * OreGainMultiplier);
 
-        return (int)ret;
-
+        //return (int)ret;
+        return 3;
     }
 
     public float WorkerSpeed(float baseTimer)
