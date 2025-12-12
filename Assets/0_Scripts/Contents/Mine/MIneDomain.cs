@@ -124,7 +124,14 @@ public sealed class MineDomain
         }
     }
 
-    //TODO: damage 부분은 나중에 player 데이터를 직접 받아서 IMineRules 를 통해 계산하도록 변경
+    private Dictionary<MineralType, int> _tempMineralBuffer = new();
+    public Dictionary<MineralType, int> ConsumeTempMineralBuffer()
+    {
+        var copy = new Dictionary<MineralType, int>(_tempMineralBuffer);
+        _tempMineralBuffer.Clear();
+        return copy;
+    }
+
     public void ClickVein(int veinId, int damage)
     {
         //Debug.Log($"ClickVein {veinId}");
@@ -136,6 +143,11 @@ public sealed class MineDomain
         var type = vein.Type;
         //IDEA: IVeinHandler 같은 인터페이스를 만들어서 종류별로 처리?
         Managers.Mineral.Add((MineralType)type, new(Managers.Stat.ClickPerGetMine()));
+
+        if (_tempMineralBuffer.ContainsKey((MineralType)type))
+            _tempMineralBuffer[(MineralType)type] += Managers.Stat.ClickPerGetMine();
+        else
+            _tempMineralBuffer[(MineralType)type] = Managers.Stat.ClickPerGetMine();
 
         OnVeinClicked?.Invoke(vein.Id, 1);
     }
