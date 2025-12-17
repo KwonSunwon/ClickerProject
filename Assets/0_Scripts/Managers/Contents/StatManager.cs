@@ -6,7 +6,7 @@ public class StatManager
 {
     public BigNumber Gold;
     public float Air = 0;
-    public float MaxAir = 100;
+    public float MaxAir = 300;
     public int Depth;
 
     public float ClickBaseDamage;

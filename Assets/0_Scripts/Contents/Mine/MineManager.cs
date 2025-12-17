@@ -24,6 +24,9 @@ public class MineManager : MonoBehaviour, ISaveHandler
     // Oxygen Timer
     private OxygenTimer _oxygenTimer;
 
+    // Cycle
+    [SerializeField] private int _currentCycle = 0;
+
     void Awake()
     {
         if (Instance != null && Instance != this) {
@@ -211,8 +214,8 @@ public class MineManager : MonoBehaviour, ISaveHandler
 
     public void StartMining()
     {
-        _oxygenTimer.StartTimer(Managers.Stat.MaxAir);
-        //_oxygenTimer.StartTimer(10);
+        //_oxygenTimer.StartTimer(Managers.Stat.MaxAir);
+        _oxygenTimer.StartTimer(3);
     }
 
     #region EventHandlers
@@ -282,6 +285,7 @@ public class MineManager : MonoBehaviour, ISaveHandler
 
     // Oxygen Depleted Event Handler
     private GameObject _settlement;
+    private const int MAX_CYCLES = 5;
     private void HandleOxygenDepleted()
     {
         Debug.Log("Oxygen Depleted! Round Over.");
@@ -293,6 +297,12 @@ public class MineManager : MonoBehaviour, ISaveHandler
         }
 
         _settlement.SetActive(true);
+
+        _currentCycle++;
+        if (_currentCycle >= MAX_CYCLES) {
+            Debug.Log("Max Cycles Reached. Returning to Main Menu.");
+        }
+        _domain.ReCalculateRockHpForCycle(_currentCycle);
     }
 
     private void HandleOxygenChanged(float current)
