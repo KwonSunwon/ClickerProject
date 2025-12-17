@@ -3,6 +3,7 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 public class CreateDataScriptsFromCSV
 {
     [MenuItem("Tools/Data/Generate Scripts from CSV")]
@@ -20,8 +21,7 @@ public class CreateDataScriptsFromCSV
         string dataClassPath = Path.Combine(Application.dataPath, "0_Scripts/Data", dataClassName + ".cs");
 
         string[] lines = File.ReadAllLines(csvFilePath);
-        if (lines.Length < 2)
-        {
+        if (lines.Length < 2) {
             Debug.LogError("CSV file must contain at least a header and one data row.");
             return;
         }
@@ -52,8 +52,7 @@ public class CreateDataScriptsFromCSV
         sb.AppendLine("[System.Serializable]");
         sb.AppendLine($"public class {dataClassName}");
         sb.AppendLine("{");
-        for (int i = 0; i < headers.Length; i++)
-        {
+        for (int i = 0; i < headers.Length; i++) {
             string fieldName = headers[i].Trim();
             string fieldType = dataTypes[i].Trim();
 
@@ -97,15 +96,13 @@ public class CreateDataScriptsFromCSV
 
         sb.AppendLine($"            string[] values = line.Split(',');");
         sb.AppendLine($"            {dataClassName} data = new {dataClassName}();");
-        for (int i = 0; i < headers.Length; i++)
-        {
+        for (int i = 0; i < headers.Length; i++) {
             string header = headers[i].Trim();
             string type = dataTypes[i].Trim();
 
             if (type == "string")
                 sb.AppendLine($"            data.{header} = values[cnt++].Trim();");
-            else if (type == "params" || type == "Params")
-            {
+            else if (type == "params" || type == "Params") {
                 sb.AppendLine($"            data.{header} = new List<string>();");
                 sb.AppendLine($"            do");
                 sb.AppendLine($"            {{");
@@ -125,3 +122,4 @@ public class CreateDataScriptsFromCSV
         return sb.ToString();
     }
 }
+#endif
