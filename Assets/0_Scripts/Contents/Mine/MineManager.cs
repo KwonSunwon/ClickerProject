@@ -28,6 +28,7 @@ public class MineManager : MonoBehaviour, ISaveHandler
     [SerializeField] private int _currentCycle = 0;
 
     [SerializeField] private MineEventChannel _OnReturnMine;
+    [SerializeField] private Canvas _buttonCanvas;
 
     void Awake()
     {
@@ -189,7 +190,7 @@ public class MineManager : MonoBehaviour, ISaveHandler
 
         Managers.Save.Register(this);
 
-        _OnReturnMine.Raised += StartMining;
+        _OnReturnMine.Raised += OnReturnMine;
     }
 
     void OnRockClicked(int rockId)
@@ -214,6 +215,13 @@ public class MineManager : MonoBehaviour, ISaveHandler
         Debug.Log($"Vein Clicked: {veinId}");
 
         _domain.ClickVein(veinId, Managers.Stat.ClickPerDamage());
+    }
+
+    private void OnReturnMine()
+    {
+        var cycleInfoPrefab = Resources.Load<GameObject>("Prefabs/UI/Mine/CycleInfo");
+        var cycleInfoUI = Instantiate(cycleInfoPrefab, _buttonCanvas.transform);
+        cycleInfoUI.GetComponent<CycleInfoPanel>().Init(_currentCycle);
     }
 
     public void StartMining()
@@ -305,6 +313,7 @@ public class MineManager : MonoBehaviour, ISaveHandler
         _currentCycle++;
         if (_currentCycle >= MAX_CYCLES) {
             Debug.Log("Max Cycles Reached. Returning to Main Menu.");
+            //TODO: 메인 메뉴로 돌아가기
         }
         _domain.ReCalculateRockHpForCycle(_currentCycle);
     }
