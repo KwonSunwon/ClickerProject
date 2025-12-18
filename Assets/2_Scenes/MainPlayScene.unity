@@ -780,6 +780,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _lineContainer: {fileID: 1245649356}
   _lineAddPosition: {fileID: 522200120}
+  _currentCycle: 0
+  _OnReturnMine: {fileID: 11400000, guid: 93daf7265d04cd847b8a9aa4c6efaf06, type: 2}
 --- !u!114 &507177628
 MonoBehaviour:
   m_ObjectHideFlags: 0

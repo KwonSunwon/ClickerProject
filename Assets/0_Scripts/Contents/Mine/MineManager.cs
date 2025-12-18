@@ -27,6 +27,8 @@ public class MineManager : MonoBehaviour, ISaveHandler
     // Cycle
     [SerializeField] private int _currentCycle = 0;
 
+    [SerializeField] private MineEventChannel _OnReturnMine;
+
     void Awake()
     {
         if (Instance != null && Instance != this) {
@@ -186,6 +188,8 @@ public class MineManager : MonoBehaviour, ISaveHandler
         _domain.BreakIfHpZero();
 
         Managers.Save.Register(this);
+
+        _OnReturnMine.Raised += StartMining;
     }
 
     void OnRockClicked(int rockId)
@@ -285,7 +289,7 @@ public class MineManager : MonoBehaviour, ISaveHandler
 
     // Oxygen Depleted Event Handler
     private GameObject _settlement;
-    private const int MAX_CYCLES = 5;
+    private const int MAX_CYCLES = 10;
     private void HandleOxygenDepleted()
     {
         Debug.Log("Oxygen Depleted! Round Over.");
