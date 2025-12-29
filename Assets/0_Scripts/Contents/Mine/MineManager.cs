@@ -24,6 +24,12 @@ public class MineManager : MonoBehaviour, ISaveHandler
     // Oxygen Timer
     private OxygenTimer _oxygenTimer;
 
+    // Cycle
+    [SerializeField] private int _currentCycle = 0;
+
+    [SerializeField] private MineEventChannel _OnReturnMine;
+    [SerializeField] private Canvas _buttonCanvas;
+
     void Awake()
     {
         if (Instance != null && Instance != this) {
@@ -183,6 +189,8 @@ public class MineManager : MonoBehaviour, ISaveHandler
         _domain.BreakIfHpZero();
 
         Managers.Save.Register(this);
+
+        _OnReturnMine.Raised += OnReturnMine;
     }
 
     void OnRockClicked(int rockId)
@@ -209,10 +217,17 @@ public class MineManager : MonoBehaviour, ISaveHandler
         _domain.ClickVein(veinId, Managers.Stat.ClickPerDamage());
     }
 
+    private void OnReturnMine()
+    {
+        var cycleInfoPrefab = Resources.Load<GameObject>("Prefabs/UI/Mine/CycleInfo");
+        var cycleInfoUI = Instantiate(cycleInfoPrefab, _buttonCanvas.transform);
+        cycleInfoUI.GetComponent<CycleInfoPanel>().Init(_currentCycle);
+    }
+
     public void StartMining()
     {
         _oxygenTimer.StartTimer(Managers.Stat.MaxAir);
-        //_oxygenTimer.StartTimer(10);
+        //_oxygenTimer.StartTimer(3);
     }
 
     #region EventHandlers
@@ -282,6 +297,7 @@ public class MineManager : MonoBehaviour, ISaveHandler
 
     // Oxygen Depleted Event Handler
     private GameObject _settlement;
+    private const int MAX_CYCLES = 10;
     private void HandleOxygenDepleted()
     {
         Debug.Log("Oxygen Depleted! Round Over.");
@@ -293,6 +309,13 @@ public class MineManager : MonoBehaviour, ISaveHandler
         }
 
         _settlement.SetActive(true);
+
+        _currentCycle++;
+        if (_currentCycle >= MAX_CYCLES) {
+            Debug.Log("Max Cycles Reached. Returning to Main Menu.");
+            //TODO: 메인 메뉴로 돌아가기
+        }
+        _domain.ReCalculateRockHpForCycle(_currentCycle);
     }
 
     private void HandleOxygenChanged(float current)

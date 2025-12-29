@@ -780,6 +780,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _lineContainer: {fileID: 1245649356}
   _lineAddPosition: {fileID: 522200120}
+  _currentCycle: 0
+  _OnReturnMine: {fileID: 11400000, guid: 93daf7265d04cd847b8a9aa4c6efaf06, type: 2}
+  _buttonCanvas: {fileID: 722657742}
 --- !u!114 &507177628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2861,7 +2864,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7239434819095022184, guid: 8321d05eb48901c4fb2188cb0155f74c, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0000019073486
+      value: 0.000030517578
       objectReference: {fileID: 0}
     - target: {fileID: 7736672569755366526, guid: 8321d05eb48901c4fb2188cb0155f74c, type: 3}
       propertyPath: m_AnchorMax.y
