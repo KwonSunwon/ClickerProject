@@ -110,6 +110,8 @@ public class UI_Skill_Button_Base : UI_Base
 			GameObject go = Managers.UI.MakeSubItem<UI_Cost_Image_Pack>(costBundle.transform).gameObject;
 			UI_Cost_Image_Pack ImageCost = go.GetOrAddComponent<UI_Cost_Image_Pack>();
 			ImageCost.SetCost(skillCost.cost);
+			MineralSlot slot = Managers.Mineral.GetSlot(skillCost.mineralType);
+			ImageCost.SetMineralImage(slot.Sprite);
 		}
 
 		gameObject.BindEvent(ClickedButton);
@@ -137,29 +139,44 @@ public class UI_Skill_Button_Base : UI_Base
 
 	}
 
+	private bool isAnimating = false;
 	public void ClickedButton(PointerEventData data)
 	{
-		var panel = Get<GameObject>((int)GameObjects.UI_Skill_Explain_Panel);
+		// 애니메이션 도중이면 호출 무시
+		if (isAnimating)
+			return;
 
+		var panel = Get<GameObject>((int)GameObjects.UI_Skill_Explain_Panel);
 		bool isActive = panel.activeSelf;
-		
+
 		if (!isActive) // 켤 때
 		{
+			isAnimating = true;
+
 			transform.SetAsLastSibling();
 			panel.SetActive(true);
-			// DOTween 초기화
 			panel.transform.localScale = Vector3.zero;
 
-			// 1초 동안 0 -> 1 스케일 업
-			panel.transform.DOScale(Vector3.one, 1f)
-				.SetEase(Ease.OutBack); // 부드럽게 튀어나오는 느낌
+			panel.transform
+				.DOScale(Vector3.one, 1f)
+				.SetEase(Ease.OutBack)
+				.OnComplete(() =>
+				{
+					isAnimating = false;
+				});
 		}
 		else // 끌 때
 		{
-			// 꺼질 때 애니메이션도 넣고 싶으면 여기
-			panel.transform.DOScale(Vector3.zero, 0.5f)
+			isAnimating = true;
+
+			panel.transform
+				.DOScale(Vector3.zero, 0.5f)
 				.SetEase(Ease.InBack)
-				.OnComplete(() => panel.SetActive(false));
+				.OnComplete(() =>
+				{
+					panel.SetActive(false);
+					isAnimating = false;
+				});
 		}
 
 		UI_Scene_Skill.GrobalClickEvent(data);

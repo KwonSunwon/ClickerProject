@@ -143,6 +143,40 @@ public struct BigNumber : IComparable<BigNumber>
 	}
 
 
+	public static bool operator ==(BigNumber a, BigNumber b)
+	{
+		return a.exponent == b.exponent && Math.Abs(a.value - b.value) < 1e-12;
+	}
+
+	// != 연산자
+	public static bool operator !=(BigNumber a, BigNumber b)
+	{
+		return !(a == b);
+	}
+
+	// < 연산자
+	public static bool operator <(BigNumber a, BigNumber b)
+	{
+		return a.CompareTo(b) < 0;
+	}
+
+	// > 연산자
+	public static bool operator >(BigNumber a, BigNumber b)
+	{
+		return a.CompareTo(b) > 0;
+	}
+
+	// <= 연산자
+	public static bool operator <=(BigNumber a, BigNumber b)
+	{
+		return a.CompareTo(b) <= 0;
+	}
+
+	// >= 연산자
+	public static bool operator >=(BigNumber a, BigNumber b)
+	{
+		return a.CompareTo(b) >= 0;
+	}
 
 	// 비교
 	public int CompareTo(BigNumber other)
@@ -162,5 +196,39 @@ public struct BigNumber : IComparable<BigNumber>
 
 		string unit = exponent < suffix.Length ? suffix[exponent] : $"e{exponent * 3}";
 		return $"{value:F2}{unit}";
+	}
+
+	public double ToDouble()
+	{
+		return value * Math.Pow(BaseNum, exponent); // BaseNum = 1000
+	}
+
+	public static BigNumber FromDouble(double d)
+	{
+		if (d <= 0)
+			return new BigNumber(0, 0);
+
+		int exp = 0;
+
+		// 1000 단위로 정규화
+		while (d >= 1000)
+		{
+			d /= 1000;
+			exp++;
+		}
+
+		return new BigNumber(d, exp);
+	}
+
+	public override bool Equals(object obj)
+	{
+		if (!(obj is BigNumber)) return false;
+		return this == (BigNumber)obj;
+	}
+
+	// GetHashCode 오버라이드 (구조체는 반드시 해줘야 함)
+	public override int GetHashCode()
+	{
+		return value.GetHashCode() ^ exponent.GetHashCode();
 	}
 }

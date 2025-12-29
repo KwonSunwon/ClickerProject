@@ -1,15 +1,19 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 
 /// <summary>
 /// MineData, MineUI 관리
 /// Mine에 object를 추가하고 제거하는 모든 작업을 여기에 요청해서 처리
 /// </summary>
-public class MineManager : MonoBehaviour
+[DisallowMultipleComponent]
+public class MineManager : MonoBehaviour, ISaveHandler
 {
-    [SerializeField] private Transform lineContainer;
-    [SerializeField] private Transform lineAddPosition;
+    public static MineManager Instance { get; private set; }
+
+    [SerializeField] private Transform _lineContainer;
+    [SerializeField] private Transform _lineAddPosition;
+
+    private Transform _lastLineGroup;
 
     private MineState _state;
     private MineDomain _domain;
@@ -17,101 +21,145 @@ public class MineManager : MonoBehaviour
     // <Depth, View>
     private readonly Dictionary<int, LineView> _lines = new();
 
-    private string SAVE_PATH;
+    // Oxygen Timer
+    private OxygenTimer _oxygenTimer;
+
+    // Cycle
+    [SerializeField] private int _currentCycle = 0;
+
+    [SerializeField] private MineEventChannel _OnReturnMine;
+    [SerializeField] private Canvas _buttonCanvas;
 
     void Awake()
     {
-        SAVE_PATH = Path.Combine(Application.persistentDataPath, "save_mine.json");
+        if (Instance != null && Instance != this) {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        Instance = this;
 
         #region CreateTempState 
 
         // TODO: 나중에 저장된 데이터 불러오기
-        var dto = new MineSaveDTO {
+        var dto = new Mine.DTO {
             Id = "Player1_Mine",
             CurrentDepth = 0,
             Lines = new()
         };
         {
-            var line = new LineSaveDTO {
+            var line = new Mine.LineDTO {
                 Depth = 0,
                 IsTopLine = true,
-                Rocks = null,
-                //Rocks = new() {
-                //new RockSaveDTO { Id = "001", Hp = 3 },
-                //new RockSaveDTO { Id = "002", Hp = 0 },
-                //new RockSaveDTO { Id = "003", Hp = 5 },
-                //new RockSaveDTO { Id = "004", Hp = 5 },
-                //new RockSaveDTO { Id = "005", Hp = 0 },
-                //new RockSaveDTO { Id = "006", Hp = 4 },
-                //new RockSaveDTO { Id = "007", Hp = 2 },
-                //new RockSaveDTO { Id = "008", Hp = 3 },
-                //new RockSaveDTO { Id = "009", Hp = 0 },
-                //new RockSaveDTO { Id = "00A", Hp = 2 },
-                //new RockSaveDTO { Id = "00B", Hp = 1 },
-                //new RockSaveDTO { Id = "00C", Hp = 5 },
-                //new RockSaveDTO { Id = "00D", Hp = 4 },
-                //new RockSaveDTO { Id = "00E", Hp = 2 },
-                //new RockSaveDTO { Id = "00F", Hp = 1 }
-                //},
-                Veins = new() {
-                    new VeinSaveDTO { Id = "010", Pos = "005", Type = (int)VeinType.Bauxite },
-                    new VeinSaveDTO { Id = "020", Pos = "00B", Type = (int)VeinType.Coal }
-                }
-            };
-            dto.Lines.Add(line);
-        }
-        {
-            var line = new LineSaveDTO {
-                Depth = 1,
-                IsTopLine = true,
+                //Rocks = null,
                 Rocks = new() {
-                new RockSaveDTO { Id = "101", Hp = 6 },
-                new RockSaveDTO { Id = "102", Hp = 6 },
-                new RockSaveDTO { Id = "103", Hp = 6 },
-                new RockSaveDTO { Id = "104", Hp = 6 },
-                new RockSaveDTO { Id = "105", Hp = 6 },
-                new RockSaveDTO { Id = "106", Hp = 6 },
-                new RockSaveDTO { Id = "107", Hp = 6 },
-                new RockSaveDTO { Id = "108", Hp = 6 },
-                new RockSaveDTO { Id = "109", Hp = 6 },
-                new RockSaveDTO { Id = "10A", Hp = 6 },
-                new RockSaveDTO { Id = "10B", Hp = 6 },
-                new RockSaveDTO { Id = "10C", Hp = 6 },
-                new RockSaveDTO { Id = "10D", Hp = 6 },
-                new RockSaveDTO { Id = "10E", Hp = 6 },
-                new RockSaveDTO { Id = "10F", Hp = 6 }
+                new Mine.RockDTO { Id = "001", Hp = 0 },
+                new Mine.RockDTO { Id = "002", Hp = 0 },
+                new Mine.RockDTO { Id = "003", Hp = 0 },
+                new Mine.RockDTO { Id = "004", Hp = 0 },
+                new Mine.RockDTO { Id = "005", Hp = 0 },
+                new Mine.RockDTO { Id = "006", Hp = 0 },
+                new Mine.RockDTO { Id = "007", Hp = 0 },
+                new Mine.RockDTO { Id = "008", Hp = 0 },
+                new Mine.RockDTO { Id = "009", Hp = 0 },
+                new Mine.RockDTO { Id = "00A", Hp = 0 },
+                new Mine.RockDTO { Id = "00B", Hp = 0 },
+                new Mine.RockDTO { Id = "00C", Hp = 6 },
+                new Mine.RockDTO { Id = "00D", Hp = 6 },
+                new Mine.RockDTO { Id = "00E", Hp = 6 },
+                new Mine.RockDTO { Id = "00F", Hp = 6 }
                 },
                 Veins = new() {
-                    new VeinSaveDTO { Id = "110", Pos = "10A", Type = (int)VeinType.CopperOre },
-                    new VeinSaveDTO { Id = "120", Pos = "102", Type = (int)VeinType.Diamond }
+                    new Mine.VeinDTO { Id = "010", Pos = "007", Type = (int)MineralType.Bauxite },
+                    new Mine.VeinDTO { Id = "020", Pos = "009", Type = (int)MineralType.Coal },
+                    new Mine.VeinDTO { Id = "030", Pos = "00B", Type = (int)MineralType.CopperOre },
+                    new Mine.VeinDTO { Id = "040", Pos = "001", Type = (int)MineralType.Emerald },
+                    new Mine.VeinDTO { Id = "050", Pos = "003", Type = (int)MineralType.IronOre },
+                    new Mine.VeinDTO { Id = "060", Pos = "005", Type = (int)MineralType.Salt }
                 }
             };
             dto.Lines.Add(line);
         }
         {
-            var line = new LineSaveDTO {
+            var line = new Mine.LineDTO {
+                Depth = 1,
+                IsTopLine = false,
+                Rocks = new() {
+                new Mine.RockDTO { Id = "101", Hp = 6 },
+                new Mine.RockDTO { Id = "102", Hp = 6 },
+                new Mine.RockDTO { Id = "103", Hp = 6 },
+                new Mine.RockDTO { Id = "104", Hp = 6 },
+                new Mine.RockDTO { Id = "105", Hp = 6 },
+                new Mine.RockDTO { Id = "106", Hp = 6 },
+                new Mine.RockDTO { Id = "107", Hp = 6 },
+                new Mine.RockDTO { Id = "108", Hp = 6 },
+                new Mine.RockDTO { Id = "109", Hp = 6 },
+                new Mine.RockDTO { Id = "10A", Hp = 6 },
+                new Mine.RockDTO { Id = "10B", Hp = 6 },
+                new Mine.RockDTO { Id = "10C", Hp = 6 },
+                new Mine.RockDTO { Id = "10D", Hp = 6 },
+                new Mine.RockDTO { Id = "10E", Hp = 6 },
+                new Mine.RockDTO { Id = "10F", Hp = 6 }
+                },
+                Veins = new() {
+                    //new Mine.VeinDTO { Id = "110", Pos = "10A", Type = (int)MineralType.Coal },
+                    new Mine.VeinDTO { Id = "120", Pos = "102", Type = (int)MineralType.Coal }
+                }
+            };
+            dto.Lines.Add(line);
+        }
+        {
+            var line = new Mine.LineDTO {
                 Depth = 2,
                 IsTopLine = false,
                 Rocks = new() {
-                new RockSaveDTO { Id = "201", Hp = 6 },
-                new RockSaveDTO { Id = "202", Hp = 6 },
-                new RockSaveDTO { Id = "203", Hp = 6 },
-                new RockSaveDTO { Id = "204", Hp = 6 },
-                new RockSaveDTO { Id = "205", Hp = 6 },
-                new RockSaveDTO { Id = "206", Hp = 6 },
-                new RockSaveDTO { Id = "207", Hp = 6 },
-                new RockSaveDTO { Id = "208", Hp = 6 },
-                new RockSaveDTO { Id = "209", Hp = 6 },
-                new RockSaveDTO { Id = "20A", Hp = 6 },
-                new RockSaveDTO { Id = "20B", Hp = 6 },
-                new RockSaveDTO { Id = "20C", Hp = 6 },
-                new RockSaveDTO { Id = "20D", Hp = 6 },
-                new RockSaveDTO { Id = "20E", Hp = 6 },
-                new RockSaveDTO { Id = "20F", Hp = 6 }
+                new Mine.RockDTO { Id = "201", Hp = 6 },
+                new Mine.RockDTO { Id = "202", Hp = 6 },
+                new Mine.RockDTO { Id = "203", Hp = 6 },
+                new Mine.RockDTO { Id = "204", Hp = 6 },
+                new Mine.RockDTO { Id = "205", Hp = 6 },
+                new Mine.RockDTO { Id = "206", Hp = 6 },
+                new Mine.RockDTO { Id = "207", Hp = 6 },
+                new Mine.RockDTO { Id = "208", Hp = 6 },
+                new Mine.RockDTO { Id = "209", Hp = 6 },
+                new Mine.RockDTO { Id = "20A", Hp = 6 },
+                new Mine.RockDTO { Id = "20B", Hp = 6 },
+                new Mine.RockDTO { Id = "20C", Hp = 6 },
+                new Mine.RockDTO { Id = "20D", Hp = 6 },
+                new Mine.RockDTO { Id = "20E", Hp = 6 },
+                new Mine.RockDTO { Id = "20F", Hp = 6 }
                 },
                 Veins = new() {
-                    new VeinSaveDTO { Id = "210", Pos = "20C", Type = (int)VeinType.IronOre },
-                    new VeinSaveDTO { Id = "220", Pos = "204", Type = (int)VeinType.Coal }
+                    //new Mine.VeinDTO { Id = "210", Pos = "20C", Type = (int)MineralType.Coal },
+                    //new Mine.VeinDTO { Id = "220", Pos = "204", Type = (int)MineralType.Coal }
+                }
+            };
+            dto.Lines.Add(line);
+        }
+        {
+            var line = new Mine.LineDTO {
+                Depth = 3,
+                IsTopLine = false,
+                Rocks = new() {
+                new Mine.RockDTO { Id = "301", Hp = 6 },
+                new Mine.RockDTO { Id = "302", Hp = 6 },
+                new Mine.RockDTO { Id = "303", Hp = 6 },
+                new Mine.RockDTO { Id = "304", Hp = 6 },
+                new Mine.RockDTO { Id = "305", Hp = 6 },
+                new Mine.RockDTO { Id = "306", Hp = 6 },
+                new Mine.RockDTO { Id = "307", Hp = 6 },
+                new Mine.RockDTO { Id = "308", Hp = 6 },
+                new Mine.RockDTO { Id = "309", Hp = 6 },
+                new Mine.RockDTO { Id = "30A", Hp = 6 },
+                new Mine.RockDTO { Id = "30B", Hp = 6 },
+                new Mine.RockDTO { Id = "30C", Hp = 6 },
+                new Mine.RockDTO { Id = "30D", Hp = 6 },
+                new Mine.RockDTO { Id = "30E", Hp = 6 },
+                new Mine.RockDTO { Id = "30F", Hp = 6 }
+                },
+                Veins = new() {
+                    //new Mine.VeinDTO { Id = "210", Pos = "20C", Type = (int)MineralType.Coal },
+                    //new Mine.VeinDTO { Id = "220", Pos = "204", Type = (int)MineralType.Coal }
                 }
             };
             dto.Lines.Add(line);
@@ -120,7 +168,7 @@ public class MineManager : MonoBehaviour
 
         //_domain = new MineDomain(_state, new DefaultMineRules(), seed: 12345);
         _state = new();
-        MineMapper.FromDTO(dto, _state);
+        Mine.Mapper.ApplyFromDTO(dto, _state);
         _domain = new MineDomain(_state, new DefaultMineRules(), 12345);
 
         _domain.OnRockDamaged += HandleRockDamaged;
@@ -129,22 +177,57 @@ public class MineManager : MonoBehaviour
         _domain.OnVeinClicked += HandleVeinDamaged;
         _domain.OnLineClear += HandleLineClear;
 
+        // Oxygen Timer
+        _oxygenTimer = gameObject.AddComponent<OxygenTimer>();
+        _oxygenTimer.OnOxygenDepleted += HandleOxygenDepleted;
+        _oxygenTimer.OnOxygenChanged += HandleOxygenChanged;
+    }
+
+    void Start()
+    {
         ReBuildAll();
         _domain.BreakIfHpZero();
+
+        Managers.Save.Register(this);
+
+        _OnReturnMine.Raised += OnReturnMine;
     }
 
     void OnRockClicked(int rockId)
     {
+        if (_oxygenTimer.IsOxygenDepleted) {
+            Debug.Log("@MineManager - Oxygen Depleted - Cannot Click Rock");
+            return;
+        }
+
         Debug.Log($"Rock Clicked: {rockId}");
 
-        _domain.ClickRock(rockId, damage: 2);
+        _domain.ClickRock(rockId, Managers.Stat.ClickPerDamage());
     }
 
     void OnVeinClick(int veinId)
     {
+        if (_oxygenTimer.IsOxygenDepleted) {
+            Debug.Log("@MineManager - Oxygen Depleted - Cannot Click Vein");
+            return;
+        }
+
         Debug.Log($"Vein Clicked: {veinId}");
 
-        _domain.ClickVein(veinId, damage: 1);
+        _domain.ClickVein(veinId, Managers.Stat.ClickPerDamage());
+    }
+
+    private void OnReturnMine()
+    {
+        var cycleInfoPrefab = Resources.Load<GameObject>("Prefabs/UI/Mine/CycleInfo");
+        var cycleInfoUI = Instantiate(cycleInfoPrefab, _buttonCanvas.transform);
+        cycleInfoUI.GetComponent<CycleInfoPanel>().Init(_currentCycle);
+    }
+
+    public void StartMining()
+    {
+        _oxygenTimer.StartTimer(Managers.Stat.MaxAir);
+        //_oxygenTimer.StartTimer(3);
     }
 
     #region EventHandlers
@@ -211,6 +294,34 @@ public class MineManager : MonoBehaviour
     {
         _lines[lineDepth].RemoveRock();
     }
+
+    // Oxygen Depleted Event Handler
+    private GameObject _settlement;
+    private const int MAX_CYCLES = 10;
+    private void HandleOxygenDepleted()
+    {
+        Debug.Log("Oxygen Depleted! Round Over.");
+
+        if (_settlement == null) {
+            var prefab = Resources.Load<GameObject>("Prefabs/UI/MineResult/MineResult");
+            var parent = GameObject.FindWithTag("ButtonCanvas").transform;
+            _settlement ??= Instantiate(prefab, parent);
+        }
+
+        _settlement.SetActive(true);
+
+        _currentCycle++;
+        if (_currentCycle >= MAX_CYCLES) {
+            Debug.Log("Max Cycles Reached. Returning to Main Menu.");
+            //TODO: 메인 메뉴로 돌아가기
+        }
+        _domain.ReCalculateRockHpForCycle(_currentCycle);
+    }
+
+    private void HandleOxygenChanged(float current)
+    {
+        Managers.Stat.Air = current;
+    }
     #endregion
 
     /// <summary>
@@ -221,7 +332,7 @@ public class MineManager : MonoBehaviour
         //NOTE: Canvas 강제 갱신
         Canvas.ForceUpdateCanvases();
         //NOTE: 기존 UI 제거
-        foreach (Transform child in lineContainer) {
+        foreach (Transform child in _lineContainer) {
             if (child.GetComponent<LineView>() != null)
                 Destroy(child.gameObject);
         }
@@ -237,59 +348,60 @@ public class MineManager : MonoBehaviour
     void AddLineView(LineState line)
     {
         var lineView = SpawnLineView(line);
-        lineView.transform.SetParent(lineContainer, false);
-        lineView.transform.SetSiblingIndex(lineAddPosition.GetSiblingIndex());
+        lineView.transform.SetParent(_lineContainer, false);
+        lineView.transform.SetSiblingIndex(_lineAddPosition.GetSiblingIndex());
         _lines[line.Depth] = lineView;
     }
 
     LineView SpawnLineView(LineState line)
     {
-        var lineView = Managers.Resource.Instantiate("UI/SubItem/LineView").GetOrAddComponent<LineView>();
+        var lineView = Managers.Resource.Instantiate("UI/Mine/LineView").GetOrAddComponent<LineView>();
         lineView.BuildFrom(line, SpawnRockView, SpawnVeinView);
         return lineView;
     }
 
     RockView SpawnRockView(RockState rock)
     {
-        var rockView = Managers.Resource.Instantiate("UI/SubItem/RockView").GetOrAddComponent<RockView>();
+        var rockView = Managers.Resource.Instantiate("UI/Mine/RockView").GetOrAddComponent<RockView>();
         rockView.Bind(rock, OnRockClicked);
         return rockView;
     }
 
     VeinView SpawnVeinView(VeinState vein)
     {
-        var veinView = Managers.Resource.Instantiate("UI/SubItem/VeinView").GetOrAddComponent<VeinView>();
+        var veinView = Managers.Resource.Instantiate("UI/Mine/VeinView").GetOrAddComponent<VeinView>();
         veinView.Bind(vein, OnVeinClick);
         return veinView;
     }
-    #endregion
+    #endregion View Spawning
 
     #region Save/Load
-    [ContextMenu("Save")]
-    public void Save()
+    public bool OnSaveRequest(GlobalDTO dto)
     {
-        var dto = MineMapper.ToDTO(_state);
-        var json = JsonUtility.ToJson(dto);
-        File.WriteAllText(SAVE_PATH, json);
+        Debug.Log("MineManager OnSaveRequest");
+        return Mine.Mapper.MakeDTO(_state, out dto.Mine);
     }
 
-    [ContextMenu("Load")]
-    public MineState Load()
+    public bool OnLoadRequest(GlobalDTO dto)
     {
-        var json = File.ReadAllText(SAVE_PATH);
-        var dto = JsonUtility.FromJson<MineSaveDTO>(json);
-        MineMapper.FromDTO(dto, _state);
+        Debug.Log("MineManager OnLoadRequest");
+        var result = Mine.Mapper.ApplyFromDTO(dto.Mine, _state);
 
-        ReBuildAll();
-        _domain.BreakIfHpZero();
+        Reload();
 
-        return _state;
+        return result;
     }
     #endregion
 
     #region Utility
+    private void Reload()
+    {
+        ReBuildAll();
+        _domain.BreakIfHpZero();
+    }
+
     /// <summary>
-    /// rockId로 RockState와 해당 Rock이 속한 LineState를 찾음
+    /// rockId로 RockState와 해당 Rock 이 속한 LineState를 찾음
     /// </summary>
     RockState FindRockState(int rockId, out LineState lineOut)
     {
@@ -315,6 +427,86 @@ public class MineManager : MonoBehaviour
         }
         lineOut = null;
         return null;
+    }
+
+    /// <summary>
+    /// 깊이와 인덱스(0~14)로 해당 위치에 RockState를 찾음
+    /// </summary>
+    public bool TryGetRockAt(int depth, int index, out RockState rock)
+    {
+        rock = _state.Lines.Find(l => l.Depth == depth)?
+            .Rocks?.Find(r => r.Id == Util.MakeRockId(depth, index));
+        return rock != null && !rock.IsBroken;
+    }
+
+    public void TryAttackRockAt(int depth, int index, int damage)
+    {
+        if (_oxygenTimer.IsOxygenDepleted) {
+            Debug.Log("@MineManager - WorkerRobot - Oxygen Depleted - Cannot Attack Rock");
+            return;
+        }
+
+        if (TryGetRockAt(depth, index, out var rock)) {
+            _domain.ClickRock(rock.Id, damage);
+        }
+    }
+
+    public bool TryAttackRockByState(RockState rock, int damage)
+    {
+        //TODO: 산소가 부족해지는 것을 Worker 쪽에서 처리하도록 변경
+        if (_oxygenTimer.IsOxygenDepleted) {
+            Debug.Log("@MineManager - WorkerRobot - Oxygen Depleted - Cannot Attack Rock");
+            return false;
+        }
+
+        if (rock != null && !rock.IsBroken) {
+            _domain.ClickRock(rock.Id, damage);
+            return true;
+        }
+        return false;
+    }
+
+    public RockView TryGetRockViewAt(int depth, int index)
+    {
+        if (_lines.TryGetValue(depth, out var lineView)) {
+            if (lineView.TryGetRockView(Util.MakeRockId(depth, index), out var rockView)) {
+                return rockView;
+            }
+        }
+        return null;
+    }
+
+    public LineView TryGetLineView(int depth)
+    {
+        if (_lines.TryGetValue(depth, out var lineView)) {
+            return lineView;
+        }
+        return null;
+    }
+
+    public bool IsLineCleared(int depth)
+    {
+        var line = _state.Lines.Find(l => l.Depth == depth);
+        if (line == null) return true;
+        return _domain.IsCleared(line);
+    }
+
+    public Dictionary<MineralType, int> ConsumeMineralBuffer()
+    {
+        return _domain.ConsumeTempMineralBuffer();
+    }
+    #endregion Utility
+
+    #region Worker Robot
+    //TODO: Worker가 한 대만 소환되도록 수정
+    private bool _workerSpawned = false;
+
+    public void SpawnWorker()
+    {
+        if (_workerSpawned) return;
+        var worker = Managers.Resource.Instantiate("Worker", _lineContainer);
+        worker.GetComponent<Worker>().Init(this);
+        _workerSpawned = true;
     }
     #endregion
 }

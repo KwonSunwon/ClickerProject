@@ -74,6 +74,8 @@ namespace Data
 		public List<int> Edges;
 		public int xPos;
 		public int yPos;
+		public string Function;
+		public float StatPerLevel;
 		
 	}
 

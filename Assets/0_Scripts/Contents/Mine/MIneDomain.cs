@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-
 using static Util;
 
 #region State Classes
@@ -9,6 +8,7 @@ public class MineState
 {
     public string Id;
     public int CurrentDepth;
+    public int UnclearedLineCount;
     public List<LineState> Lines = new();
 }
 
@@ -32,7 +32,7 @@ public class RockState
     public int Id;
     //public int Type;
     public int Hp;
-    //public int MaxHp;
+    public int MaxHp;   //NOTE: Line Depth에 따라 결정
     public bool IsBroken => Hp <= 0;
 }
 
@@ -49,7 +49,9 @@ public interface IMineRules
     public IReadOnlyList<VeinState> PlanVeinToLine(LineState line, System.Random rng);
 
     public int RocksPerLine();
-    public int RockHpForDepth(int depth);
+    public int RockHpForDepth(int depth, int cycle = 1);
+
+    public int GetLineMaintainCount();
 }
 
 public sealed class MineDomain
@@ -70,6 +72,17 @@ public sealed class MineDomain
         _state = state;
         _rules = rules;
         _rng = new(seed);
+
+        CalculateUnclearedLineCount();
+    }
+
+    private void CalculateUnclearedLineCount()
+    {
+        foreach (var line in _state.Lines) {
+            if (!IsCleared(line)) {
+                _state.UnclearedLineCount++;
+            }
+        }
     }
 
     public void BreakIfHpZero()
@@ -86,7 +99,7 @@ public sealed class MineDomain
     //TODO: damage 부분은 나중에 player 데이터를 직접 받아서 IMineRules 를 통해 계산하도록 변경
     public void ClickRock(int rockId, int damage)
     {
-        Debug.Log($"ClickRock {rockId} with damage {damage}");
+        //Debug.Log($"ClickRock {rockId} with damage {damage}");
 
         var (line, rock) = FindRock(rockId);
         if (!line.IsTopLine || rock == null || rock.IsBroken) return;
@@ -96,14 +109,32 @@ public sealed class MineDomain
 
         if (rock.IsBroken) {
             OnRockBroken?.Invoke(rock.Id);
-            TryExtendLineIfCleared(line);
+
+            if (IsCleared(line)) {
+                ClearRock(line);
+                OnLineClear?.Invoke(line.Depth);
+                //NOTE: 클리어된 다음 라인을 TopLine으로 설정해 클릭 가능하도록
+                _state.Lines[line.Depth + 1].IsTopLine = true;
+
+                _state.UnclearedLineCount--;
+                if (_state.UnclearedLineCount <= 1) {
+                    ExtendLine(line);
+                }
+            }
         }
     }
 
-    //TODO: damage 부분은 나중에 player 데이터를 직접 받아서 IMineRules 를 통해 계산하도록 변경
+    private Dictionary<MineralType, int> _tempMineralBuffer = new();
+    public Dictionary<MineralType, int> ConsumeTempMineralBuffer()
+    {
+        var copy = new Dictionary<MineralType, int>(_tempMineralBuffer);
+        _tempMineralBuffer.Clear();
+        return copy;
+    }
+
     public void ClickVein(int veinId, int damage)
     {
-        Debug.Log($"ClickVein {veinId}");
+        //Debug.Log($"ClickVein {veinId}");
 
         var (line, vein) = FindVein(veinId);
         if (vein == null) return;
@@ -111,30 +142,41 @@ public sealed class MineDomain
         //TODO: vein 클릭 시 종류에 따른 자원 획득, 효과 발동 등 로직 처리
         var type = vein.Type;
         //IDEA: IVeinHandler 같은 인터페이스를 만들어서 종류별로 처리?
+        Managers.Mineral.Add((MineralType)type, new(Managers.Stat.ClickPerGetMine()));
+
+        if (_tempMineralBuffer.ContainsKey((MineralType)type))
+            _tempMineralBuffer[(MineralType)type] += Managers.Stat.ClickPerGetMine();
+        else
+            _tempMineralBuffer[(MineralType)type] = Managers.Stat.ClickPerGetMine();
 
         OnVeinClicked?.Invoke(vein.Id, 1);
     }
 
-    private void TryExtendLineIfCleared(LineState line)
+    public bool IsCleared(LineState line)
     {
-        if (line.Rocks.TrueForAll(r => r.IsBroken)) {
-            Debug.Log($"Line {line.Depth} Cleared, Adding New Line");
+        return line.Rocks == null || line.Rocks.TrueForAll(r => r.IsBroken);
+    }
 
-            //NOTE: 이 두 라인이 실행되어야 State에 있는 Rocks도 메모리를 차지하지 않고 제거됨
-            line.Rocks.Clear();
-            line.Rocks = null;
+    private void ClearRock(LineState line)
+    {
+        //NOTE: 이 두 라인이 실행되어야 State에 있는 Rocks도 메모리를 차지하지 않고 제거됨
+        if (line.Rocks == null) return;
+        line.Rocks.Clear();
+        line.Rocks = null;
+    }
 
-            OnLineClear?.Invoke(line.Depth);
+    private void ExtendLine(LineState line)
+    {
+        Debug.Log($"Line {line.Depth} Cleared, Adding New Line");
 
-            //NOTE: 클리어된 다음 라인을 TopLine으로 설정해 클릭 가능하도록
-            _state.Lines[line.Depth + 1].IsTopLine = true;
-
+        do {
             //NOTE: 맨 아래에 새로운 라인 추가
             var newDepth = _state.Lines[^1].Depth + 1;
             _state.Lines.Add(MakeNewLine(newDepth));
             _state.CurrentDepth = newDepth;
             OnLineAdded?.Invoke(newDepth);
-        }
+            _state.UnclearedLineCount++;
+        } while (_state.UnclearedLineCount != _rules.GetLineMaintainCount());
     }
 
     private LineState MakeNewLine(int depth)
@@ -151,9 +193,11 @@ public sealed class MineDomain
     {
         line.Rocks = new();
         for (int i = 0; i < _rules.RocksPerLine(); i++) {
+            var maxHp = _rules.RockHpForDepth(line.Depth);
             var rock = new RockState {
                 Id = MakeRockId(line.Depth, i),
-                Hp = _rules.RockHpForDepth(line.Depth)
+                MaxHp = maxHp,
+                Hp = maxHp
             };
             line.Rocks.Add(rock);
         }
@@ -163,6 +207,23 @@ public sealed class MineDomain
     {
         var veins = _rules.PlanVeinToLine(line, _rng);
         line.Veins.AddRange(veins);
+    }
+
+    public void ReCalculateRockHpForCycle(int cycle)
+    {
+        foreach (var line in _state.Lines) {
+            //NOTE: 이미 클리어된 라인, 부수는 중인 라인은 체력 변경 X
+            if (IsCleared(line) || line.IsTopLine) {
+                continue;
+            }
+
+            var newHp = _rules.RockHpForDepth(line.Depth, cycle);
+            Debug.Log($"@MineDomain - Cycle: {cycle}, Depth: {line.Depth} -> Rock Hp: {newHp}");
+            foreach (var rock in line.Rocks) {
+                rock.MaxHp = newHp;
+                rock.Hp = newHp;
+            }
+        }
     }
 
     (LineState, RockState) FindRock(int rockId)

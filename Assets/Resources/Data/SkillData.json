@@ -10,12 +10,14 @@
       "precedingSkills": [],
       "Edges": [],
       "xPos": 0,
-      "yPos": 200
+      "yPos": 200,
+      "Function": "OreGainMultiplier",
+      "StatPerLevel": 0.1
     },
     {
       "id": 2,
       "name": "보너스 자원 드롭",
-      "description": "레벨당 획득한 광물을 2배로 획득할 확률이 +2% 증가합니다. (최대 10회 중첩)",
+      "description": "레벨당 획득한 모든 광물을 2배로 획득할 확률이 +1% 증가합니다. (최대 10회 중첩)",
       "skillCost": [
         { "type": "IronOre", "value": "20" },
         { "type": "CopperOre", "value": "20" }
@@ -23,12 +25,14 @@
       "precedingSkills": [1],
       "Edges": [3],
       "xPos": -200,
-      "yPos": 400
+      "yPos": 400,
+      "Function": "OreGainMultiplier",
+      "StatPerLevel": 0.01
     },
     {
       "id": 3,
       "name": "산소 절약 스킬",
-      "description": "레벨당 클릭당 산소 소모량이 -5% 감소합니다. (최대 10회 중첩)",
+      "description": "레벨당 산소 소모량이 -4% 감소합니다. (최대 10회 중첩)",
       "skillCost": [
         { "type": "IronOre", "value": "20" },
         { "type": "Coal", "value": "20" }
@@ -36,7 +40,9 @@
       "precedingSkills": [1],
       "Edges": [4],
       "xPos": 0,
-      "yPos": 400
+      "yPos": 400,
+      "Function": "TimerDecayRate",
+      "StatPerLevel": -0.04
     },
     {
       "id": 4,
@@ -50,12 +56,14 @@
       "precedingSkills": [1],
       "Edges": [5],
       "xPos": 200,
-      "yPos": 400
+      "yPos": 400,
+      "Function": "",
+      "StatPerLevel": 1
     },
     {
       "id": 5,
-      "name": "희귀 광물 발견",
-      "description": "레벨당 다음 단계 광물 발견 확률이 +3% 증가합니다. (최대 10회 중첩)",
+      "name": "골드 획득량 증가",
+      "description": "레벨당 모든 골드 획득량이 +15% 증가합니다. (최대 10회 중첩)",
       "skillCost": [
         { "type": "Bauxite", "value": "20" },
         { "type": "Salt", "value": "20" }
@@ -63,12 +71,14 @@
       "precedingSkills": [2],
       "Edges": [4],
       "xPos": -200,
-      "yPos": 600
+      "yPos": 600,
+      "Function": "GoldGainMultiplier",
+      "StatPerLevel": 0.15
     },
     {
       "id": 6,
       "name": "대용량 산소탱크",
-      "description": "레벨당 최대 산소량이 +30% 증가합니다. (최대 10회 중첩)",
+      "description": "레벨당 최대 산소량이 +20% 증가합니다. (최대 10회 중첩)",
       "skillCost": [
         { "type": "Bauxite", "value": "20" },
         { "type": "Quartz", "value": "20" }
@@ -76,12 +86,14 @@
       "precedingSkills": [3],
       "Edges": [4],
       "xPos": 0,
-      "yPos": 600
+      "yPos": 600,
+      "Function": "TimerMaxTime",
+      "StatPerLevel": 0.2
     },
     {
       "id": 7,
       "name": "스핀 모터 강화",
-      "description": "레벨당 모든 채굴기계 작업속도가 +7% 증가합니다. (최대 10회 중첩)",
+      "description": "레벨당 모든 채굴기계의 작업속도가 +4% 증가합니다. (최대 10회 중첩)",
       "skillCost": [
         { "type": "Lithium", "value": "20" },
         { "type": "Salt", "value": "20" }
@@ -89,7 +101,9 @@
       "precedingSkills": [4],
       "Edges": [4],
       "xPos": 200,
-      "yPos": 600
+      "yPos": 600,
+      "Function": "MinerWorkSpeed",
+      "StatPerLevel": 0.04
     },
     {
       "id": 8,
@@ -103,12 +117,14 @@
       "precedingSkills": [5],
       "Edges": [4],
       "xPos": -200,
-      "yPos": 800
+      "yPos": 800,
+      "Function": "OreGainMultiplier",
+      "StatPerLevel": 0.2
     },
     {
       "id": 9,
-      "name": "숨참기 훈련",
-      "description": "레벨당 클릭 시 산소를 소모하지 않을 확률이 +2% 증가합니다. (최대 10회 중첩)",
+      "name": "산소 효율 향상",
+      "description": "레벨당 모든 산소 관련 효과가 +4% 증가합니다. (최대 10회 중첩)",
       "skillCost": [
         { "type": "Emerald", "value": "20" },
         { "type": "Ruby", "value": "20" },
@@ -117,7 +133,9 @@
       "precedingSkills": [6],
       "Edges": [4],
       "xPos": 0,
-      "yPos": 800
+      "yPos": 800,
+      "Function": "OxygenEfficiency",
+      "StatPerLevel": 0.04
     },
     {
       "id": 10,
@@ -131,12 +149,14 @@
       "precedingSkills": [7],
       "Edges": [4],
       "xPos": 200,
-      "yPos": 800
+      "yPos": 800,
+      "Function": "MinerOreGain",
+      "StatPerLevel": 0.06
     },
     {
       "id": 11,
       "name": "산소 재활용",
-      "description": "레벨당 클릭 시 산소 회복 확률이 +3%, 회복량이 +0.5% 증가합니다. (최대 10회 중첩)",
+      "description": "레벨당 10초마다 산소가 +2초 자동 회복됩니다. (최대 2회 중첩)",
       "skillCost": [
         { "type": "Uranium", "value": "20" },
         { "type": "GammaStone", "value": "20" },
@@ -145,12 +165,14 @@
       "precedingSkills": [9],
       "Edges": [4],
       "xPos": 0,
-      "yPos": 1000
+      "yPos": 1000,
+      "Function": "TimerAutoRecovery",
+      "StatPerLevel": 2
     },
     {
       "id": 12,
       "name": "엔진 강화",
-      "description": "레벨당 모든 채굴기계의 기본 채굴 파워가 +30% 증가합니다. (최대 10회 중첩)",
+      "description": "레벨당 모든 채굴기계의 작업속도가 +20% 증가합니다. (최대 4회 중첩)",
       "skillCost": [
         { "type": "XenonCrystal", "value": "20" },
         { "type": "GammaStone", "value": "20" },
@@ -159,7 +181,9 @@
       "precedingSkills": [10],
       "Edges": [4],
       "xPos": 200,
-      "yPos": 1000
+      "yPos": 1000,
+      "Function": "MinerWorkSpeed",
+      "StatPerLevel": 0.2
     },
     {
       "id": 13,
@@ -173,7 +197,9 @@
       "precedingSkills": [11],
       "Edges": [4],
       "xPos": 0,
-      "yPos": 1200
+      "yPos": 1200,
+      "Function": "TimerMaxTime",
+      "StatPerLevel": 0.5
     },
     {
       "id": 14,
@@ -187,7 +213,9 @@
       "precedingSkills": [4],
       "Edges": [5],
       "xPos": 400,
-      "yPos": 600
+      "yPos": 600,
+      "Function": "",
+      "StatPerLevel": 1
     },
     {
       "id": 15,
@@ -201,7 +229,9 @@
       "precedingSkills": [14],
       "Edges": [4],
       "xPos": 400,
-      "yPos": 800
+      "yPos": 800,
+      "Function": "",
+      "StatPerLevel": 1
     },
     {
       "id": 16,
@@ -215,7 +245,9 @@
       "precedingSkills": [15],
       "Edges": [6],
       "xPos": 600,
-      "yPos": 800
+      "yPos": 800,
+      "Function": "",
+      "StatPerLevel": 1
     },
     {
       "id": 17,
@@ -229,7 +261,9 @@
       "precedingSkills": [16],
       "Edges": [4],
       "xPos": 600,
-      "yPos": 1000
+      "yPos": 1000,
+      "Function": "",
+      "StatPerLevel": 1
     },
     {
       "id": 18,
@@ -243,7 +277,9 @@
       "precedingSkills": [17],
       "Edges": [2],
       "xPos": 400,
-      "yPos": 1000
+      "yPos": 1000,
+      "Function": "",
+      "StatPerLevel": 1
     },
     {
       "id": 101,
@@ -255,7 +291,9 @@
       "precedingSkills": [],
       "Edges": [],
       "xPos": -200,
-      "yPos": 0
+      "yPos": 0,
+      "Function": "",
+      "StatPerLevel": 1
     },
     {
       "id": 102,
@@ -268,7 +306,9 @@
       "precedingSkills": [101],
       "Edges": [3],
       "xPos": -400,
-      "yPos": 200
+      "yPos": 200,
+      "Function": "",
+      "StatPerLevel": 1
     },
     {
       "id": 103,
@@ -281,7 +321,9 @@
       "precedingSkills": [101],
       "Edges": [2],
       "xPos": -400,
-      "yPos": 0
+      "yPos": 0,
+      "Function": "",
+      "StatPerLevel": 1
     },
     {
       "id": 104,
@@ -295,7 +337,9 @@
       "precedingSkills": [101],
       "Edges": [1],
       "xPos": -400,
-      "yPos": -200
+      "yPos": -200,
+      "Function": "",
+      "StatPerLevel": 1
     },
     {
       "id": 105,
@@ -309,7 +353,9 @@
       "precedingSkills": [104],
       "Edges": [2],
       "xPos": -600,
-      "yPos": -200
+      "yPos": -200,
+      "Function": "",
+      "StatPerLevel": 0.2
     },
     {
       "id": 106,
@@ -323,7 +369,9 @@
       "precedingSkills": [102],
       "Edges": [2],
       "xPos": -600,
-      "yPos": 200
+      "yPos": 200,
+      "Function": "",
+      "StatPerLevel": -0.15
     },
     {
       "id": 107,
@@ -337,7 +385,9 @@
       "precedingSkills": [106],
       "Edges": [2],
       "xPos": -800,
-      "yPos": 200
+      "yPos": 200,
+      "Function": "",
+      "StatPerLevel": 0.1
     },
     {
       "id": 108,
@@ -351,7 +401,9 @@
       "precedingSkills": [105],
       "Edges": [2],
       "xPos": -800,
-      "yPos": -200
+      "yPos": -200,
+      "Function": "",
+      "StatPerLevel": 0.5
     },
     {
       "id": 109,
@@ -365,7 +417,9 @@
       "precedingSkills": [107, 108],
       "Edges": [1, 3],
       "xPos": -1000,
-      "yPos": 0
+      "yPos": 0,
+      "Function": "",
+      "StatPerLevel": 0.1
     },
     {
       "id": 110,
@@ -379,7 +433,9 @@
       "precedingSkills": [109],
       "Edges": [2],
       "xPos": -1200,
-      "yPos": 0
+      "yPos": 0,
+      "Function": "",
+      "StatPerLevel": 0.3
     },
     {
       "id": 111,
@@ -393,7 +449,9 @@
       "precedingSkills": [110],
       "Edges": [4],
       "xPos": -1200,
-      "yPos": 200
+      "yPos": 200,
+      "Function": "",
+      "StatPerLevel": 1
     },
     {
       "id": 112,
@@ -407,7 +465,9 @@
       "precedingSkills": [110],
       "Edges": [0],
       "xPos": -1200,
-      "yPos": -200
+      "yPos": -200,
+      "Function": "",
+      "StatPerLevel": 1
     },
     {
       "id": 113,
@@ -421,7 +481,9 @@
       "precedingSkills": [111],
       "Edges": [2],
       "xPos": -1400,
-      "yPos": 200
+      "yPos": 200,
+      "Function": "",
+      "StatPerLevel": 1
     },
     {
       "id": 114,
@@ -435,25 +497,28 @@
       "precedingSkills": [112],
       "Edges": [2],
       "xPos": -1400,
-      "yPos": -200
+      "yPos": -200,
+      "Function": "",
+      "StatPerLevel": 1
     },
-
     {
       "id": 201,
       "name": "일꾼 데미지 증가",
-      "description": "레벨당 모든 일꾼 공격력이 +20% 증가합니다. (최대 5회 중첩)",
+      "description": "레벨당 일꾼 공격력이 +20% 증가합니다. (최대 5회 중첩)",
       "skillCost": [
         { "type": "IronOre", "value": "20" }
       ],
       "precedingSkills": [],
       "Edges": [],
       "xPos": 0,
-      "yPos": -200
+      "yPos": -200,
+      "Function": "WorkerDamageMultiplier",
+      "StatPerLevel": 0.2
     },
     {
       "id": 202,
-      "name": "드릴팔 일꾼 해금",
-      "description": "드릴팔 일꾼을 고용할 수 있습니다. (해금, 최대 1회)",
+      "name": "드릴팔 파츠 해금",
+      "description": "일꾼에게 드릴팔을 장착합니다. (해금, 최대 1회)",
       "skillCost": [
         { "type": "IronOre", "value": "20" },
         { "type": "CopperOre", "value": "20" }
@@ -461,12 +526,14 @@
       "precedingSkills": [201],
       "Edges": [1],
       "xPos": -200,
-      "yPos": -400
+      "yPos": -400,
+      "Function": "",
+      "StatPerLevel": 1
     },
     {
       "id": 203,
       "name": "일꾼 공속 증가",
-      "description": "레벨당 모든 일꾼 공격속도가 +25% 증가합니다. (최대 4회 중첩)",
+      "description": "레벨당 일꾼 공격속도가 +25% 증가합니다. (최대 4회 중첩)",
       "skillCost": [
         { "type": "IronOre", "value": "20" },
         { "type": "Coal", "value": "20" }
@@ -474,12 +541,14 @@
       "precedingSkills": [201],
       "Edges": [0],
       "xPos": 0,
-      "yPos": -400
+      "yPos": -400,
+      "Function": "WorkerAttackSpeed",
+      "StatPerLevel": 0.25
     },
     {
       "id": 204,
       "name": "일꾼 크리티컬 확률",
-      "description": "레벨당 모든 일꾼 크리티컬 확률이 +15% 증가합니다. (최대 4회 중첩)",
+      "description": "레벨당 일꾼 크리티컬 확률이 +15% 증가합니다. (최대 4회 중첩)",
       "skillCost": [
         { "type": "Coal", "value": "20" },
         { "type": "Bauxite", "value": "20" },
@@ -488,7 +557,9 @@
       "precedingSkills": [201],
       "Edges": [7],
       "xPos": 200,
-      "yPos": -400
+      "yPos": -400,
+      "Function": "WorkerCritChance",
+      "StatPerLevel": 0.15
     },
     {
       "id": 205,
@@ -502,12 +573,14 @@
       "precedingSkills": [202, 203, 204],
       "Edges": [0, 1, 7],
       "xPos": 0,
-      "yPos": -600
+      "yPos": -600,
+      "Function": "WorkerAttackSpeed",
+      "StatPerLevel": 0.1
     },
     {
       "id": 206,
       "name": "관통형 데미지 증가",
-      "description": "레벨당 관통 능력을 가진 일꾼들의 데미지가 +50% 증가합니다. (최대 3회 중첩)",
+      "description": "레벨당 일꾼의 모든 관통형 파츠의 최종 데미지가 +50% 증가합니다. (최대 3회 중첩)",
       "skillCost": [
         { "type": "Diamond", "value": "20" },
         { "type": "Sapphire", "value": "20" },
@@ -516,12 +589,14 @@
       "precedingSkills": [205],
       "Edges": [1],
       "xPos": -200,
-      "yPos": -800
+      "yPos": -800,
+      "Function": "WorkerPartDamageBonus.piercing",
+      "StatPerLevel": 0.5
     },
     {
       "id": 207,
       "name": "단일형 데미지 증가",
-      "description": "레벨당 단일 공격 전문 일꾼들의 데미지가 +60% 증가합니다. (최대 3회 중첩)",
+      "description": "레벨당 일꾼의 모든 단일형 파츠의 최종 데미지가 +50% 증가합니다. (최대 3회 중첩)",
       "skillCost": [
         { "type": "Ruby", "value": "20" },
         { "type": "Emerald", "value": "20" },
@@ -530,12 +605,14 @@
       "precedingSkills": [205],
       "Edges": [0],
       "xPos": 0,
-      "yPos": -800
+      "yPos": -800,
+      "Function": "WorkerPartDamageBonus.single",
+      "StatPerLevel": 0.5
     },
     {
       "id": 208,
       "name": "일꾼 크리티컬 데미지",
-      "description": "레벨당 모든 일꾼 크리티컬 데미지가 +40% 증가합니다. (최대 4회 중첩)",
+      "description": "레벨당 일꾼 크리티컬 데미지가 +40% 증가합니다. (최대 4회 중첩)",
       "skillCost": [
         { "type": "Diamond", "value": "20" },
         { "type": "Sapphire", "value": "20" },
@@ -544,12 +621,14 @@
       "precedingSkills": [205],
       "Edges": [7],
       "xPos": 200,
-      "yPos": -800
+      "yPos": -800,
+      "Function": "WorkerCritDamage",
+      "StatPerLevel": 0.4
     },
     {
       "id": 209,
       "name": "일꾼 연속 일격",
-      "description": "추가 일격 발생 시 레벨당 3% 확률로 1회 추가 공격이 발생합니다. (최대 3회 중첩)",
+      "description": "레벨당 10% 확률로 2회 추가 공격이 발생합니다. (최대 3회 중첩)",
       "skillCost": [
         { "type": "Uranium", "value": "20" },
         { "type": "XenonCrystal", "value": "20" },
@@ -559,12 +638,14 @@
       "precedingSkills": [206, 207, 208],
       "Edges": [0, 1, 7],
       "xPos": 0,
-      "yPos": -1000
+      "yPos": -1000,
+      "Function": "WorkerAttackSpeed",
+      "StatPerLevel": 0.2
     },
     {
       "id": 210,
       "name": "과부하 모드",
-      "description": "레벨당 일꾼들이 1% 확률로 과부하 모드에 진입하여 5초간 모든 능력치가 200% 증가합니다. (레벨당 확률 +1%, 지속시간 +1초, 해금, 최대 5회 중첩)",
+      "description": "레벨당 일꾼이 1% 확률로 5초간 모든 능력치가 200% 증가합니다. (레벨당 확률 +1%, 지속시간 고정 5초, 해금, 최대 5회 중첩)",
       "skillCost": [
         { "type": "QuantumFlux", "value": "20" },
         { "type": "VoidCrystal", "value": "20" },
@@ -575,12 +656,14 @@
       "precedingSkills": [209],
       "Edges": [0],
       "xPos": 0,
-      "yPos": -1200
+      "yPos": -1200,
+      "Function": "WorkerOverloadChance",
+      "StatPerLevel": 0.01
     },
     {
       "id": 211,
-      "name": "화염방사 일꾼 해금",
-      "description": "화염방사 일꾼을 고용할 수 있습니다. (해금, 최대 1회)",
+      "name": "화염방사기 파츠 해금",
+      "description": "일꾼에게 화염방사기를 장착합니다. (해금, 최대 1회)",
       "skillCost": [
         { "type": "Uranium", "value": "12" },
         { "type": "GammaStone", "value": "15" },
@@ -589,12 +672,14 @@
       "precedingSkills": [202],
       "Edges": [0],
       "xPos": -200,
-      "yPos": -600
+      "yPos": -600,
+      "Function": "",
+      "StatPerLevel": 1
     },
     {
       "id": 212,
-      "name": "플라즈마캐논 일꾼 해금",
-      "description": "플라즈마캐논 일꾼을 고용할 수 있습니다. (해금, 최대 1회)",
+      "name": "플라즈마캐논 파츠 해금",
+      "description": "일꾼에게 플라즈마캐논을 장착합니다. (해금, 최대 1회)",
       "skillCost": [
         { "type": "VoidCrystal", "value": "15" },
         { "type": "DarkMatterShard", "value": "12" },
@@ -603,12 +688,14 @@
       "precedingSkills": [211],
       "Edges": [2],
       "xPos": -400,
-      "yPos": -600
+      "yPos": -600,
+      "Function": "",
+      "StatPerLevel": 1
     },
     {
       "id": 213,
-      "name": "미사일런처 일꾼 해금",
-      "description": "미사일런처 일꾼을 고용할 수 있습니다. (해금, 최대 1회)",
+      "name": "미사일런처 파츠 해금",
+      "description": "일꾼에게 미사일런처를 장착합니다. (해금, 최대 1회)",
       "skillCost": [
         { "type": "NeutroniumOre", "value": "10" },
         { "type": "AlienAlloy", "value": "8" },
@@ -617,12 +704,14 @@
       "precedingSkills": [212],
       "Edges": [0],
       "xPos": -400,
-      "yPos": -800
+      "yPos": -800,
+      "Function": "",
+      "StatPerLevel": 1
     },
     {
       "id": 214,
-      "name": "레이저검 일꾼 해금",
-      "description": "레이저검 일꾼을 고용할 수 있습니다. (해금, 최대 1회)",
+      "name": "레이저검 파츠 해금",
+      "description": "일꾼에게 레이저검을 장착합니다. (해금, 최대 1회)",
       "skillCost": [
         { "type": "VoidCrystal", "value": "8" },
         { "type": "StellarIron", "value": "12" },
@@ -631,12 +720,14 @@
       "precedingSkills": [213],
       "Edges": [2],
       "xPos": -600,
-      "yPos": -800
+      "yPos": -800,
+      "Function": "",
+      "StatPerLevel": 1
     },
     {
       "id": 215,
-      "name": "이온빔커터 일꾼 해금",
-      "description": "이온빔커터 일꾼을 고용할 수 있습니다. (해금, 최대 1회)",
+      "name": "이온빔커터 파츠 해금",
+      "description": "일꾼에게 이온빔커터를 장착합니다. (해금, 최대 1회)",
       "skillCost": [
         { "type": "AlienAlloy", "value": "12" },
         { "type": "NeutroniumOre", "value": "15" },
@@ -645,12 +736,14 @@
       "precedingSkills": [214],
       "Edges": [0],
       "xPos": -600,
-      "yPos": -1000
+      "yPos": -1000,
+      "Function": "",
+      "StatPerLevel": 1
     },
     {
       "id": 216,
-      "name": "중성자펀치드릴 일꾼 해금",
-      "description": "중성자펀치드릴 일꾼을 고용할 수 있습니다. (해금, 최대 1회)",
+      "name": "중성자펀치드릴 파츠 해금",
+      "description": "일꾼에게 중성자펀치드릴을 장착합니다. (해금, 최대 1회)",
       "skillCost": [
         { "type": "NeutroniumOre", "value": "20" },
         { "type": "AlienAlloy", "value": "15" },
@@ -659,25 +752,28 @@
       "precedingSkills": [215],
       "Edges": [6],
       "xPos": -400,
-      "yPos": -1000
+      "yPos": -1000,
+      "Function": "",
+      "StatPerLevel": 1
     },
-
     {
       "id": 301,
       "name": "클릭 크리티컬 확률 증가",
-      "description": "레벨당 클릭 시 크리티컬 확률이 +10% 증가합니다. (최대 5회 중첩)",
+      "description": "레벨당 클릭 크리티컬 확률이 +10% 증가합니다. (최대 5회 중첩)",
       "skillCost": [
         { "type": "IronOre", "value": "20" }
       ],
       "precedingSkills": [],
       "Edges": [],
       "xPos": 200,
-      "yPos": 0
+      "yPos": 0,
+      "Function": "ClickCriticalChance",
+      "StatPerLevel": 0.1
     },
     {
       "id": 302,
       "name": "오토 클릭",
-      "description": "레벨당 자동 1회 클릭 속도가 1초씩 빨라집니다. (5초 → 1초, 최대 5회 중첩)",
+      "description": "자동으로 1초당 1회씩 클릭합니다.",
       "skillCost": [
         { "type": "IronOre", "value": "20" },
         { "type": "CopperOre", "value": "20" }
@@ -685,7 +781,9 @@
       "precedingSkills": [303],
       "Edges": [4],
       "xPos": 400,
-      "yPos": 200
+      "yPos": 200,
+      "Function": "AutoClickCount",
+      "StatPerLevel": 1
     },
     {
       "id": 303,
@@ -698,7 +796,9 @@
       "precedingSkills": [301],
       "Edges": [6],
       "xPos": 400,
-      "yPos": 0
+      "yPos": 0,
+      "Function": "ClickDamageMultiplier",
+      "StatPerLevel": 0.15
     },
     {
       "id": 304,
@@ -712,12 +812,14 @@
       "precedingSkills": [303],
       "Edges": [0],
       "xPos": 400,
-      "yPos": -200
+      "yPos": -200,
+      "Function": "ClickAreaRange",
+      "StatPerLevel": 1
     },
     {
       "id": 305,
       "name": "오토 클릭 x2",
-      "description": "레벨당 자동 2회 클릭 속도가 1초씩 빨라집니다. (5초 → 1초, 최대 5회 중첩)",
+      "description": "자동으로 1초당 2회씩 클릭합니다.",
       "skillCost": [
         { "type": "Bauxite", "value": "20" },
         { "type": "Lithium", "value": "20" },
@@ -726,12 +828,14 @@
       "precedingSkills": [302],
       "Edges": [6],
       "xPos": 600,
-      "yPos": 200
+      "yPos": 200,
+      "Function": "AutoClickCount",
+      "StatPerLevel": 2
     },
     {
       "id": 306,
       "name": "트리플 클릭",
-      "description": "레벨당 5% 확률로 더블클릭이 발동 후 한 번 더 클릭합니다. (최대 3회 중첩)",
+      "description": "레벨당 15% 확률로 한 번의 클릭이 3번 적용됩니다. (최대 3회 중첩)",
       "skillCost": [
         { "type": "Quartz", "value": "20" },
         { "type": "Lithium", "value": "20" },
@@ -740,12 +844,14 @@
       "precedingSkills": [303],
       "Edges": [6],
       "xPos": 600,
-      "yPos": 0
+      "yPos": 0,
+      "Function": "ClickDamageMultiplier",
+      "StatPerLevel": 0.3
     },
     {
       "id": 307,
       "name": "클릭 그림자",
-      "description": "레벨당 클릭의 30%의 데미지로 0.5초 후 같은 지점에 그림자 클릭이 발생합니다. (최대 3회 중첩)",
+      "description": "레벨당 클릭 데미지의 30%만큼 추가 데미지를 줍니다. (최대 3회 중첩)",
       "skillCost": [
         { "type": "Bauxite", "value": "20" },
         { "type": "Quartz", "value": "20" },
@@ -754,12 +860,14 @@
       "precedingSkills": [304],
       "Edges": [6],
       "xPos": 600,
-      "yPos": -200
+      "yPos": -200,
+      "Function": "ClickDamageMultiplier",
+      "StatPerLevel": 0.3
     },
     {
       "id": 308,
       "name": "오토 클릭 x3",
-      "description": "레벨당 자동 3회 클릭 속도가 1초씩 빨라집니다. (5초 → 1초, 최대 5회 중첩)",
+      "description": "자동으로 1초당 3회씩 클릭합니다.",
       "skillCost": [
         { "type": "GoldNugget", "value": "20" },
         { "type": "Ruby", "value": "20" },
@@ -768,7 +876,9 @@
       "precedingSkills": [305],
       "Edges": [4],
       "xPos": 600,
-      "yPos": 400
+      "yPos": 400,
+      "Function": "AutoClickCount",
+      "StatPerLevel": 3
     },
     {
       "id": 309,
@@ -782,12 +892,14 @@
       "precedingSkills": [306],
       "Edges": [5, 6, 7],
       "xPos": 800,
-      "yPos": 0
+      "yPos": 0,
+      "Function": "ClickCritDamage",
+      "StatPerLevel": 2.0
     },
     {
       "id": 310,
       "name": "클릭 흡수",
-      "description": "레벨당 클릭 시 산소 회복 확률이 +1%, 회복량이 +5% 증가합니다. (최대 5회 중첩)",
+      "description": "레벨당 클릭 100회마다 산소가 +1초 회복됩니다. (최대 5회 중첩)",
       "skillCost": [
         { "type": "Diamond", "value": "20" },
         { "type": "Sapphire", "value": "20" },
@@ -797,12 +909,14 @@
       "precedingSkills": [309],
       "Edges": [5],
       "xPos": 1000,
-      "yPos": 200
+      "yPos": 200,
+      "Function": "ClickOxygenRecovery",
+      "StatPerLevel": 1
     },
     {
       "id": 311,
       "name": "클릭 채굴",
-      "description": "레벨당 클릭 시 2% 확률로 해당지역의 광물 1~3개를 추가로 획득합니다. (최대 5회 중첩)",
+      "description": "레벨당 클릭 시 2% 확률로 해당지역의 광물 1개를 추가로 획득합니다. (최대 5회 중첩)",
       "skillCost": [
         { "type": "Emerald", "value": "20" },
         { "type": "Sapphire", "value": "20" },
@@ -812,7 +926,9 @@
       "precedingSkills": [309],
       "Edges": [6],
       "xPos": 1000,
-      "yPos": 0
+      "yPos": 0,
+      "Function": "ClickOreMiningChance",
+      "StatPerLevel": 0.02
     },
     {
       "id": 312,
@@ -826,7 +942,9 @@
       "precedingSkills": [310],
       "Edges": [6],
       "xPos": 1200,
-      "yPos": 200
+      "yPos": 200,
+      "Function": "ClickDamageMultiplier",
+      "StatPerLevel": 0.01
     },
     {
       "id": 313,
@@ -840,12 +958,14 @@
       "precedingSkills": [311],
       "Edges": [0],
       "xPos": 1000,
-      "yPos": -200
+      "yPos": -200,
+      "Function": "ClickDamageMultiplier",
+      "StatPerLevel": 1.0
     },
     {
       "id": 314,
       "name": "메가 클릭",
-      "description": "레벨당 2% 확률로 클릭 시 클릭 데미지가 +200% 증가하며, 주변 2칸 범위에 충격파가 발생합니다. (최대 5회 중첩)",
+      "description": "레벨당 1% 확률로 클릭시 최종 클릭 데미지의 1000% 로 클릭합니다. (최대 5회 중첩)",
       "skillCost": [
         { "type": "QuantumFlux", "value": "20" },
         { "type": "VoidCrystal", "value": "20" },
@@ -854,12 +974,14 @@
       "precedingSkills": [312, 313],
       "Edges": [0, 5],
       "xPos": 1200,
-      "yPos": 0
+      "yPos": 0,
+       "Function": "ClickMegaHitChance",
+      "StatPerLevel": 0.01
     },
     {
       "id": 315,
       "name": "슈퍼 크리티컬",
-      "description": "레벨당 1% 확률로 슈퍼 크리티컬이 발동하여 클릭 데미지가 +400% 증가합니다. (최대 5회 중첩)",
+      "description": "레벨당 1% 확률로 클릭시 최종 클릭 데미지의 4000%로 클릭합니다. (최대 5회 중첩)",
       "skillCost": [
         { "type": "AlienAlloy", "value": "20" },
         { "type": "NeutroniumOre", "value": "20" },
@@ -870,7 +992,9 @@
       "precedingSkills": [314],
       "Edges": [6],
       "xPos": 1400,
-      "yPos": 0
+      "yPos": 0,
+        "Function": "ClickSuperCritChance",
+      "StatPerLevel": 0.01
     }
   ]
 }
