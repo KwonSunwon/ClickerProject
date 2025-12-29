@@ -67,13 +67,24 @@ public class DefaultMineRules : IMineRules
 
     public int RocksPerLine() => 15;
 
-    public int RockHpForDepth(int depth)
+    const int H0 = 100;       // 바위 기본 체력
+    const double rd = 0.015f; // 깊이 별 증가율 (1.5%)
+    const double rc = 0.12f;  // 사이클 별 증가율 (12%)
+    public int RockHpForDepth(int depth, int cycle = 1)
     {
         //TODO: 밸런스 조정 필요
         //return Math.Max(6, (int)(depth * 0.5f));
 
-        var finalHp = (int)(100 * (1 + 0.015f * depth * depth));
-        return finalHp;
+        //var finalHp = (int)(100 * (1 + 0.015f * depth * depth));
+
+        var logHp =
+            Math.Log(H0)
+            + depth * Math.Log(1.0 + rd)
+            + (cycle - 1) * Math.Log(1.0 + rc);
+
+        var finalHp = Math.Exp(logHp);
+
+        return (int)finalHp;
     }
 
     public int GetLineMaintainCount() => 4;
