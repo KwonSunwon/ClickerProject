@@ -49,7 +49,7 @@ public interface IMineRules
     public IReadOnlyList<VeinState> PlanVeinToLine(LineState line, System.Random rng);
 
     public int RocksPerLine();
-    public int RockHpForDepth(int depth);
+    public int RockHpForDepth(int depth, int cycle = 1);
 
     public int GetLineMaintainCount();
 }
@@ -207,6 +207,23 @@ public sealed class MineDomain
     {
         var veins = _rules.PlanVeinToLine(line, _rng);
         line.Veins.AddRange(veins);
+    }
+
+    public void ReCalculateRockHpForCycle(int cycle)
+    {
+        foreach (var line in _state.Lines) {
+            //NOTE: 이미 클리어된 라인, 부수는 중인 라인은 체력 변경 X
+            if (IsCleared(line) || line.IsTopLine) {
+                continue;
+            }
+
+            var newHp = _rules.RockHpForDepth(line.Depth, cycle);
+            Debug.Log($"@MineDomain - Cycle: {cycle}, Depth: {line.Depth} -> Rock Hp: {newHp}");
+            foreach (var rock in line.Rocks) {
+                rock.MaxHp = newHp;
+                rock.Hp = newHp;
+            }
+        }
     }
 
     (LineState, RockState) FindRock(int rockId)
