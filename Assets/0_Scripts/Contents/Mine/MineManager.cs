@@ -226,8 +226,8 @@ public class MineManager : MonoBehaviour, ISaveHandler
 
     public void StartMining()
     {
-        //_oxygenTimer.StartTimer(Managers.Stat.MaxAir);
-        _oxygenTimer.StartTimer(3);
+        _oxygenTimer.StartTimer(Managers.Stat.MaxAir);
+        //_oxygenTimer.StartTimer(3);
     }
 
     #region EventHandlers
