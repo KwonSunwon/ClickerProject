@@ -1080,6 +1080,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Parent_GO: {fileID: 8594008307257923748}
+  _OnReturnMine: {fileID: 11400000, guid: 93daf7265d04cd847b8a9aa4c6efaf06, type: 2}
 --- !u!1001 &535033231135771208
 PrefabInstance:
   m_ObjectHideFlags: 0
